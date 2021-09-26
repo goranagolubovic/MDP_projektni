@@ -1,0 +1,46 @@
+package database;
+
+
+
+import java.beans.XMLEncoder;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import model.User;
+import redis.clients.jedis.Jedis;
+
+public class RedisDatabase {
+
+	public static ArrayList<User> listOfUsers=new ArrayList<User>();
+	public  static void main(String [] args)  throws Exception{
+		for(int i=1;i<=8;i++)
+		listOfUsers.add(new User("korisni"+i,"lozinka"+i,i));
+		serializeWithXML(listOfUsers);
+		System.out.println("serialized");
+		try {
+		Jedis jedis=new Jedis("localhost");
+		
+		
+		}
+		catch(Exception e) {
+		e.printStackTrace();
+		}
+	}
+	public static void serializeWithXML(ArrayList<User>listOfUsers) {
+		
+			XMLEncoder encoder;
+			try {
+				encoder = new XMLEncoder(new FileOutputStream(new File("xml.out")));
+				encoder.writeObject(listOfUsers);
+				encoder.close();
+			
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+	}
+}

@@ -1,0 +1,37 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from XMLDeserializerService WSDL service -->
+
+  <service name="XMLDeserializer" provider="java:RPC" style="wrapped" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://control"/>
+      <parameter name="wsdlServiceElement" value="XMLDeserializerService"/>
+      <parameter name="schemaQualified" value="http://control,http://model"/>
+      <parameter name="wsdlServicePort" value="XMLDeserializer"/>
+      <parameter name="className" value="control.XMLDeserializerSoapBindingImpl"/>
+      <parameter name="wsdlPortType" value="XMLDeserializer"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <operation name="deserializeWithXML" qname="operNS:deserializeWithXML" xmlns:operNS="http://control" returnQName="retNS:deserializeWithXMLReturn" xmlns:retNS="http://control" returnType="rtns:User" xmlns:rtns="http://model" soapAction="" >
+        <parameter qname="pns:XMLuser" xmlns:pns="http://control" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <parameter name="allowedMethods" value="deserializeWithXML"/>
+
+      <typeMapping
+        xmlns:ns="http://model"
+        qname="ns:User"
+        type="java:model.User"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+  </service>
+</deployment>

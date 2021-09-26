@@ -1,0 +1,17 @@
+package database;
+
+import redis.clients.jedis.Jedis;
+
+public class RedisDatabase {
+
+	public static void main(String [] args) throws Exception{
+		try {
+		Jedis jedis=new Jedis("localhost");
+		System.out.println(jedis.ping());
+		
+		}
+		catch(Exception e) {
+		e.printStackTrace();
+		}
+	}
+}

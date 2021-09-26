@@ -1,0 +1,31 @@
+package database;
+
+import java.util.ArrayList;
+
+
+import model.User;
+import model.XMLSerializer;
+import redis.clients.jedis.Jedis;
+
+public class RedisDatabase {
+
+	public static ArrayList<User> listOfUsers=new ArrayList<User>();
+	public  static void main(String [] args)  throws Exception{
+		for(int i=1;i<=4;i++)
+		listOfUsers.add(new User("korisni"+i,"lozinka"+i,i));
+		XMLSerializer serializer=new XMLSerializer();
+		
+		try {
+		Jedis jedis=new Jedis("localhost");
+			for(int i=1;i<5;i++) {
+			jedis.set(String.valueOf(i), serializer.serializeWithXML(listOfUsers.get(i-1)));
+			}
+			jedis.close();
+		}
+		catch(Exception e) {
+		e.printStackTrace();
+		}
+		
+	}
+	
+}
