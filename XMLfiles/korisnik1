@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<java version="15.0.1" class="java.beans.XMLDecoder">
+<java version="11.0.2" class="java.beans.XMLDecoder">
  <object class="model.User">
   <void property="password">
    <string>f47baffbe0414d1921e434bb687f63b7067cd08841b4422443200c0826111720</string>
