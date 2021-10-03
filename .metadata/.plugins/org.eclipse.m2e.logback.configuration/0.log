@@ -14,3 +14,11 @@
 2021-10-02 00:51:40,578 [Framework stop - Equinox Container: e2dff9c5-ccd5-4acb-b8a5-9cd1d5d5c12c] INFO  org.eclipse.jetty.server.session - node0 Stopped scavenging
 2021-10-02 00:51:41,716 [Framework stop - Equinox Container: e2dff9c5-ccd5-4acb-b8a5-9cd1d5d5c12c] INFO  o.e.j.server.handler.ContextHandler - Stopped o.e.j.s.ServletContextHandler@340f341f{/wse,null,UNAVAILABLE}
 2021-10-02 01:10:51,066 [Worker-1: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2021-10-02 16:18:41,422 [Worker-108: Debug Source Lookup] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/json/json/20180130/json-20180130-sources.jar
+2021-10-02 16:18:41,635 [Worker-108: Debug Source Lookup] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/json/json/20180130/json-20180130-sources.jar
+2021-10-03 15:06:44,559 [Worker-3: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2021-10-03 16:37:58,866 [Worker-0: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2021-10-03 17:56:04,475 [Worker-47: Debug Source Lookup] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/axis/axis/1.4/axis-1.4-sources.jar
+2021-10-03 17:56:06,580 [Worker-47: Debug Source Lookup] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/axis/axis/1.4/axis-1.4-sources.jar
+2021-10-03 17:56:07,288 [Worker-47: Debug Source Lookup] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/apache/axis/axis/1.4/axis-1.4-sources.jar
+2021-10-03 17:56:09,198 [Worker-47: Debug Source Lookup] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/apache/axis/axis/1.4/axis-1.4-sources.jar

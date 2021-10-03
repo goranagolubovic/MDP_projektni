@@ -6,49 +6,59 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class User {
-	private String Username;
+	private String username;
 	private String password;
-	private int idZSMDP;
-	public String getUsername() {
-		return Username;
-	}
-	public void setUsername(String Username) {
-		this.Username = Username;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
+	private String id;
+	
 	public User() {
 		
 	}
-	public User(String Username, String password, int idZSMDP) {
+	
+	
+	 public User(String username, String password, String idZSMDP) {
 		super();
-		this.Username = Username;
-		this.idZSMDP = idZSMDP;
+		this.username = username;
 		try {
-			this.password = toHexString(getSHA(password));
+			this.password = User.toHexString(User.getSHA(password));
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		this.id = idZSMDP;
+		
 		
 	}
+
 	@Override
 	public String toString() {
-		return "User [Username=" + Username + ", password=" + password + ", idZSMDP=" + idZSMDP + "]";
+		return "User [username=" + username + ", password=" + password + ", idZSMDP=" + id + "]";
 	}
-	public int getIdZSMDP() {
-		return idZSMDP;
+
+	public String getUsername() {
+		return username;
 	}
-	public void setUserID(int idZSMDP) {
-		this.idZSMDP = idZSMDP;
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
-	
-	
-	 public static byte[] getSHA(String input) throws NoSuchAlgorithmException  
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String idZSMDP) {
+		this.id = idZSMDP;
+	}
+
+	public static byte[] getSHA(String input) throws NoSuchAlgorithmException  
 	    {  
 	        /* MessageDigest instance for hashing using SHA256 */  
 	        MessageDigest md = MessageDigest.getInstance("SHA-256");  

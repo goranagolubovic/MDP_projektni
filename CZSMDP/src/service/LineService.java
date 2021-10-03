@@ -1,5 +1,8 @@
 package service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -9,14 +12,18 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.gson.Gson;
+
 import database.RedisDatabase;
 import model.Line;
 
 @Path("/line")
 public class LineService {
 	RedisDatabase redis;
+	Gson gson;
 	public LineService() {
 		redis=new RedisDatabase();
+		gson=new Gson();
 	}
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -28,8 +35,9 @@ public class LineService {
 	@Path("/{sign}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam ("sign") String signOfStation) {
-		String lines=redis.getLineFromDatbase(signOfStation);
-		if(lines!="") {
+		List<Line> lines=new ArrayList<>();
+		lines=redis.getLineFromDatbase(signOfStation);
+		if(!lines.isEmpty()) {
 			return Response.status(200).entity(lines).build();
 		}
 		else {
@@ -37,19 +45,22 @@ public class LineService {
 					).build();
 		}
 	}
+	@Path("/{sign}")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response add(Line line) {
-//		if(redis.addLineInDatabase(line)) {
-//			System.out.println("added");
-//			return Response.status(200).entity(line).build();
-//		}
-//		else {
-//			System.out.println("not added");
-//			return Response.status(500).entity("Greska pri dodavanju linije.").build();
-//		}
-		return Response.ok(line).build();
+	public Response add(Line line,@PathParam("sign") String sign) {
+		/*if(redis.addLineInDatabase(line)) {
+			System.out.println("added");
+			return Response.status(200).entity(line).build();
+		}
+		else {
+			System.out.println("not added");
+			return Response.status(500).entity("Greska pri dodavanju linije.").build();
+		}*/
+		Line l=gson.fromJson(line.toString(),Line.class);
+		System.out.println(l.toString());
+		return Response.status(200).entity(l).build();
 	}
 	
 }

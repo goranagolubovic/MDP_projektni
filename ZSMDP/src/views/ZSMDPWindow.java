@@ -5,11 +5,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.Window;
-
+import java.awt.*;
 import javax.swing.JFrame;
 import javax.swing.JButton;
+import javax.swing.JComponent;
+
 import java.awt.BorderLayout;
+
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
@@ -26,40 +31,44 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTextArea;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
+class ImagePanel extends JComponent {
+    private Image image;
+    public ImagePanel(Image image) {
+        this.image = image;
+    }
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(image, 0, 0, this);
+    }
+}
+
+// elsewhere
 
 public class ZSMDPWindow {
 
 
 	private JFrame frame;
+	private String idZSMDP;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ZSMDPWindow window = new ZSMDPWindow();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.
 	 */
-	public ZSMDPWindow() {
+	
+
+	public ZSMDPWindow(String idZSMDP) {
+		this.idZSMDP=idZSMDP;
 		initialize();
 	}
 
@@ -68,71 +77,40 @@ public class ZSMDPWindow {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-	
-		frame.setBounds(100, 100, 594, 439);
+		frame.setTitle(idZSMDP);
+		System.out.print(idZSMDP);
+		Image img = Toolkit.getDefaultToolkit().getImage("C:\\Users\\goran\\Desktop\\MDP-projektni\\ZSMDP\\images\\template1.jpg");
+		frame.setBounds(100, 100, 577, 603);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);;
-		
+		frame.getContentPane().setLayout(null);
+		frame.getContentPane().setBackground(new Color(205,116,63));
+		frame.setVisible(true);
 		JLabel lbl1 = new JLabel();
 		lbl1.addMouseMotionListener(new MouseAdapter() {
-			
-
-		            
 		            public void mouseEntered(MouseEvent me) {
 		                startTimer();
 		            }
 		        });
-
-		       
-		    
-	
-		   
-		
 		lbl1.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				TimeTableRecording ttr=new TimeTableRecording();
 				ttr.main(null);
-				/*
-				try {
-					Properties prop=new Properties();
-				
-					prop.load(new FileInputStream("resources"+File.separator+"config.properties"));
-					
-					/
-					// priprema i otvaranje HTTP zahtjeva
-					URL url = new URL(prop.getProperty("BASE_URL"));
-					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-					conn.setDoOutput(true);
-					conn.setRequestMethod("POST"); 
-					conn.setRequestProperty("Content-Type", "application/json");
-					// podaci za body dio zahtjeva
-					JSONObject input = new JSONObject(new Line());
-					// slanje body dijela
-					OutputStream os = conn.getOutputStream();
-					os.write(input.toString().getBytes());
-					os.flush();
-					// prijem odgovora na zahtjev
-					if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-						throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
-					}
-					// citanje odgovora
-					BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-					String output;
-					while ((output = br.readLine()) != null) {
-						System.out.println(output);
-					}
-					os.close();
-					br.close();
-					conn.disconnect();
-				} catch (Exception e2) {
-					e2.printStackTrace();
 				}
-				
-			*/}
 		});
-		lbl1.setBounds(30, 42, 57, 50);
+		lbl1.setBounds(43, 64, 57, 50);
 		lbl1.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\goran\\Desktop\\MDP-projektni\\ZSMDP\\images\\add.png").getImage().getScaledInstance(lbl1.getWidth(), lbl1.getHeight(), Image.SCALE_SMOOTH)));
 		frame.getContentPane().add(lbl1);
+		
+		JLabel lbl2 = new JLabel("New label");
+		lbl2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				EventQueue.invokeLater(()-> new ViewTimeTable(idZSMDP));
+			}
+		});
+		lbl2.setBounds(43, 137, 57, 50);
+		lbl2.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\goran\\Desktop\\MDP-projektni\\ZSMDP\\images\\driving.png").getImage().getScaledInstance(lbl2.getWidth(), lbl2.getHeight(), Image.SCALE_SMOOTH)));
+		frame.getContentPane().add(lbl2);;
 	}
 private void startTimer() {
     TimerTask task = new TimerTask() {

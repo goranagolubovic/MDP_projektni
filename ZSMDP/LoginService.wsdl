@@ -24,9 +24,8 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
   <schema elementFormDefault="qualified" targetNamespace="http://model" xmlns="http://www.w3.org/2001/XMLSchema">
    <complexType name="User">
     <sequence>
-     <element name="idZSMDP" type="xsd:int"/>
+     <element name="id" nillable="true" type="xsd:string"/>
      <element name="password" nillable="true" type="xsd:string"/>
-     <element name="userID" type="xsd:int"/>
      <element name="username" nillable="true" type="xsd:string"/>
     </sequence>
    </complexType>
@@ -93,7 +92,7 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
       <wsdl:port binding="impl:LoginServiceSoapBinding" name="LoginService">
 
-         <wsdlsoap:address location="http://localhost:8080/CZSMDP1/services/LoginService"/>
+         <wsdlsoap:address location="http://localhost:8080/CZSMDP/services/LoginService"/>
 
       </wsdl:port>
 

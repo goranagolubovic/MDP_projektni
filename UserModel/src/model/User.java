@@ -6,15 +6,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class User {
-	private String username;
+	
 	private String password;
-	private int idZSMDP;
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
+	private String idZSMDP;
+	
+	
 	public String getPassword() {
 		return password;
 	}
@@ -24,9 +20,9 @@ public class User {
 	public User() {
 		
 	}
-	public User(String username, String password, int idZSMDP) {
+	public User( String password, String idZSMDP) {
 		super();
-		this.username = username;
+	
 		this.idZSMDP = idZSMDP;
 		try {
 			this.password = toHexString(getSHA(password));
@@ -38,12 +34,12 @@ public class User {
 	}
 	@Override
 	public String toString() {
-		return "User [username=" + username + ", password=" + password + ", idZSMDP=" + idZSMDP + "]";
+		return "User [ password=" + password + ", idZSMDP=" + idZSMDP + "]";
 	}
-	public int getIdZSMDP() {
+	public String getIdZSMDP() {
 		return idZSMDP;
 	}
-	public void setUserID(int idZSMDP) {
+	public void setUserID(String idZSMDP) {
 		this.idZSMDP = idZSMDP;
 	}
 	

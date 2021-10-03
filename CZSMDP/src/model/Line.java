@@ -8,8 +8,12 @@ import java.util.List;
 public class Line {
 	private String sign;
 	private List<StationTime> stations;
+	
 	public String getSign() {
 		return sign;
+	}
+	public Line() {
+		
 	}
 	public void setSign(String sign) {
 		this.sign = sign;
@@ -27,8 +31,15 @@ public class Line {
 	}
 	@Override
 	public String toString() {
-		return "Line [sign=" + sign + ", stations=" + stations + "]";
+		String s="";
+		s+=sign +"\n";
+		for(StationTime st:stations) {
+			s+="      ";
+			s+=st+"\n";
+		}
+		return s;
 	}
+
 }
 
 

@@ -33,6 +33,7 @@ import javax.swing.ImageIcon;
 
 public class LoginWindow {
 
+	private static final String ZSMDP_IMAGES_TRAIN_JPG = "C:\\Users\\goran\\Desktop\\MDP-projektni\\ZSMDP\\images\\train.jpg";
 	private JFrame frame;
 	private JTextField txtIme;
 	private JTextField textField;
@@ -135,23 +136,23 @@ public class LoginWindow {
 					e2.printStackTrace();
 				}
 					if(user!=null) {
+						
 					System.out.println("Uspjesno prijavljen!");
-					ZSMDPWindow zsmdpWindow=new ZSMDPWindow();
-					zsmdpWindow.main(null);
+					System.out.println(user.getId());
+					final User finalUser = user;
+					EventQueue.invokeLater(()-> new ZSMDPWindow(finalUser.getId()));
+					
 					}
 					else {
 						System.out.println("Neuspjesno prijavljen!");
 					}
-				
-			
 			}
 		});
 		btnNewButton.setBounds(310, 219, 96, 21);
 		frame.getContentPane().add(btnNewButton);
-		
 		JLabel lblNewLabel = new JLabel();
 		lblNewLabel.setBounds(10, 10, 485, 367);
-		lblNewLabel.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\goran\\Desktop\\MDP-projektni\\ZSMDP\\images\\train.jpg").getImage().getScaledInstance(lblNewLabel.getWidth(), lblNewLabel.getHeight(), Image.SCALE_DEFAULT)));
+		lblNewLabel.setIcon(new ImageIcon(new ImageIcon(ZSMDP_IMAGES_TRAIN_JPG).getImage().getScaledInstance(lblNewLabel.getWidth(), lblNewLabel.getHeight(), Image.SCALE_DEFAULT)));
 		
 		frame.getContentPane().add(lblNewLabel);
 		

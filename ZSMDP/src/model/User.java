@@ -8,11 +8,9 @@
 package model;
 
 public class User  implements java.io.Serializable {
-    private int idZSMDP;
+    private java.lang.String id;
 
     private java.lang.String password;
-
-    private int userID;
 
     private java.lang.String username;
 
@@ -20,34 +18,32 @@ public class User  implements java.io.Serializable {
     }
 
     public User(
-           int idZSMDP,
+           java.lang.String id,
            java.lang.String password,
-           int userID,
            java.lang.String username) {
-           this.idZSMDP = idZSMDP;
+           this.id = id;
            this.password = password;
-           this.userID = userID;
            this.username = username;
     }
 
 
     /**
-     * Gets the idZSMDP value for this User.
+     * Gets the id value for this User.
      * 
-     * @return idZSMDP
+     * @return id
      */
-    public int getIdZSMDP() {
-        return idZSMDP;
+    public java.lang.String getId() {
+        return id;
     }
 
 
     /**
-     * Sets the idZSMDP value for this User.
+     * Sets the id value for this User.
      * 
-     * @param idZSMDP
+     * @param id
      */
-    public void setIdZSMDP(int idZSMDP) {
-        this.idZSMDP = idZSMDP;
+    public void setId(java.lang.String id) {
+        this.id = id;
     }
 
 
@@ -68,26 +64,6 @@ public class User  implements java.io.Serializable {
      */
     public void setPassword(java.lang.String password) {
         this.password = password;
-    }
-
-
-    /**
-     * Gets the userID value for this User.
-     * 
-     * @return userID
-     */
-    public int getUserID() {
-        return userID;
-    }
-
-
-    /**
-     * Sets the userID value for this User.
-     * 
-     * @param userID
-     */
-    public void setUserID(int userID) {
-        this.userID = userID;
     }
 
 
@@ -122,11 +98,12 @@ public class User  implements java.io.Serializable {
         __equalsCalc = obj;
         boolean _equals;
         _equals = true && 
-            this.idZSMDP == other.getIdZSMDP() &&
+            ((this.id==null && other.getId()==null) || 
+             (this.id!=null &&
+              this.id.equals(other.getId()))) &&
             ((this.password==null && other.getPassword()==null) || 
              (this.password!=null &&
               this.password.equals(other.getPassword()))) &&
-            this.userID == other.getUserID() &&
             ((this.username==null && other.getUsername()==null) || 
              (this.username!=null &&
               this.username.equals(other.getUsername())));
@@ -141,11 +118,12 @@ public class User  implements java.io.Serializable {
         }
         __hashCodeCalc = true;
         int _hashCode = 1;
-        _hashCode += getIdZSMDP();
+        if (getId() != null) {
+            _hashCode += getId().hashCode();
+        }
         if (getPassword() != null) {
             _hashCode += getPassword().hashCode();
         }
-        _hashCode += getUserID();
         if (getUsername() != null) {
             _hashCode += getUsername().hashCode();
         }
@@ -160,22 +138,16 @@ public class User  implements java.io.Serializable {
     static {
         typeDesc.setXmlType(new javax.xml.namespace.QName("http://model", "User"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("idZSMDP");
-        elemField.setXmlName(new javax.xml.namespace.QName("http://model", "idZSMDP"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
-        elemField.setNillable(false);
+        elemField.setFieldName("id");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://model", "id"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("password");
         elemField.setXmlName(new javax.xml.namespace.QName("http://model", "password"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setNillable(true);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("userID");
-        elemField.setXmlName(new javax.xml.namespace.QName("http://model", "userID"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
-        elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("username");

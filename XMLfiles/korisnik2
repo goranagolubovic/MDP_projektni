@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <java version="11.0.2" class="java.beans.XMLDecoder">
  <object class="model.User">
+  <void property="id">
+   <string>C</string>
+  </void>
   <void property="password">
    <string>8f5b0d96f685d770f54e24850ebb79a96909a8aeb851a52454a02cba350c7e1b</string>
   </void>
