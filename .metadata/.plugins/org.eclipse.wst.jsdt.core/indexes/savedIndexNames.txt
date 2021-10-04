@@ -1,7 +1,0 @@
-INDEX VERSION 1.4+C:\Users\goran\Desktop\MDP-projektni\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
-3706885695.index
-2430170041.index
-4244761272.index
-1417826519.index
-2712579113.index
-2640545691.index
