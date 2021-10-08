@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="C:/Users/goran/Desktop/jar_files/jedis-2.8.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/goran/.p2/pool/plugins/org.apache.axis_1.4.0.v201411182030/lib/axis.jar"/>
+	<classpathentry kind="lib" path="C:/Users/goran/.p2/pool/plugins/org.apache.commons.discovery_0.2.0.v201004190315/lib/commons-discovery-0.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/goran/.p2/pool/plugins/javax.xml.rpc_1.1.0.v201209140446/lib/jaxrpc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/goran/.p2/pool/plugins/javax.xml.soap_1.2.0.v201005080501/lib/saaj.jar"/>
+	<classpathentry kind="lib" path="C:/Users/goran/.p2/pool/plugins/javax.wsdl_1.6.2.v201012040545.jar"/>
+	<classpathentry kind="lib" path="C:/Users/goran/.p2/pool/plugins/org.apache.commons.logging_1.2.0.v20180409-1502.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-15.0.1/lib/javafx.base.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-15.0.1/lib/javafx.controls.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-15.0.1/lib/javafx.fxml.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-15.0.1/lib/javafx.graphics.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-15.0.1/lib/javafx.media.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-15.0.1/lib/javafx.swing.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-15.0.1/lib/javafx.web.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/javafx-sdk-15.0.1/lib/javafx-swt.jar"/>
+	<classpathentry kind="lib" path="C:/Users/goran/Desktop/json/json-20180130.jar"/>
+	<classpathentry kind="lib" path="C:/Users/goran/Desktop/Lab07/MDP_Lab_serial/lib/gson-2.8.5.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.8.0_301"/>
+	<classpathentry kind="lib" path="C:/Users/goran/Desktop/MDP-projektni/ZSMDP/javafx-sdk-15.0.1/lib/javafx.base.jar"/>
+	<classpathentry kind="lib" path="C:/Users/goran/Desktop/MDP-projektni/ZSMDP/javafx-sdk-15.0.1/lib/javafx.controls.jar"/>
+	<classpathentry kind="lib" path="C:/Users/goran/Desktop/MDP-projektni/ZSMDP/javafx-sdk-15.0.1/lib/javafx.fxml.jar"/>
+	<classpathentry kind="lib" path="C:/Users/goran/Desktop/MDP-projektni/ZSMDP/javafx-sdk-15.0.1/lib/javafx.graphics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/goran/Desktop/MDP-projektni/ZSMDP/javafx-sdk-15.0.1/lib/javafx.media.jar"/>
+	<classpathentry kind="lib" path="C:/Users/goran/Desktop/MDP-projektni/ZSMDP/javafx-sdk-15.0.1/lib/javafx.swing.jar"/>
+	<classpathentry kind="lib" path="C:/Users/goran/Desktop/MDP-projektni/ZSMDP/javafx-sdk-15.0.1/lib/javafx.web.jar"/>
+	<classpathentry kind="lib" path="C:/Users/goran/Desktop/MDP-projektni/ZSMDP/javafx-sdk-15.0.1/lib/javafx-swt.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

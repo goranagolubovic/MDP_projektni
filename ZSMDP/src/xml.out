@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="15.0.1" class="java.beans.XMLDecoder">
+ <object class="java.util.ArrayList">
+  <void method="add">
+   <object class="model.User">
+    <void property="password">
+     <string>f47baffbe0414d1921e434bb687f63b7067cd08841b4422443200c0826111720</string>
+    </void>
+    <void property="userID">
+     <int>1</int>
+    </void>
+    <void property="username">
+     <string>korisni1</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="model.User">
+    <void property="password">
+     <string>8f5b0d96f685d770f54e24850ebb79a96909a8aeb851a52454a02cba350c7e1b</string>
+    </void>
+    <void property="userID">
+     <int>2</int>
+    </void>
+    <void property="username">
+     <string>korisni2</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="model.User">
+    <void property="password">
+     <string>65b287cf4f1fd0a04cea95cb1a59c8a95743a33c9259c5f59290ff207f5f33e0</string>
+    </void>
+    <void property="userID">
+     <int>3</int>
+    </void>
+    <void property="username">
+     <string>korisni3</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="model.User">
+    <void property="password">
+     <string>c12b5c292ed51227f6a05bd821da1f35f31865e3b02c4241dd390d24ca79f5cd</string>
+    </void>
+    <void property="userID">
+     <int>4</int>
+    </void>
+    <void property="username">
+     <string>korisni4</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="model.User">
+    <void property="password">
+     <string>63ee957ee5e141b69d6cd2910d10b0c773d7b1d84a2c04e1624383dd8326928d</string>
+    </void>
+    <void property="userID">
+     <int>5</int>
+    </void>
+    <void property="username">
+     <string>korisni5</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="model.User">
+    <void property="password">
+     <string>18acead9fcf83fb20495516b2c1a67cbf8a687a732646ec5c54afe0c704eb5e7</string>
+    </void>
+    <void property="userID">
+     <int>6</int>
+    </void>
+    <void property="username">
+     <string>korisni6</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="model.User">
+    <void property="password">
+     <string>c567218d24ac067e3a721f9b3fa9990e44f97dfbfee3f689187fceddc1909019</string>
+    </void>
+    <void property="userID">
+     <int>7</int>
+    </void>
+    <void property="username">
+     <string>korisni7</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="model.User">
+    <void property="password">
+     <string>36f823def123a73a5b90c8aa96534774503cc61d6a3d870cdcb0fba944d13bed</string>
+    </void>
+    <void property="userID">
+     <int>8</int>
+    </void>
+    <void property="username">
+     <string>korisni8</string>
+    </void>
+   </object>
+  </void>
+ </object>
+</java>
