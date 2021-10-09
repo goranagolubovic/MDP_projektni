@@ -55,7 +55,7 @@ public class RestMethods {
 	public static void methodPut(String nameOfMethod,String id,Line line) {
 		URL url;
 		try {
-			url = new URL("http://localhost:8080/CZSMDP/api/line/"/*+id*/);
+			url = new URL("http://localhost:8080/CZSMDP/api/line/"+id);
 			HttpURLConnection conn;
 			try {
 				conn = (HttpURLConnection) url.openConnection();

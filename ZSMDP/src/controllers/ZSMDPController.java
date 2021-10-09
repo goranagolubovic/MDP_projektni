@@ -8,9 +8,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -20,9 +22,15 @@ public class ZSMDPController implements Initializable {
 	ImageView viewTimeImage;
 	@FXML
 	ImageView addTimeImage;
+	@FXML
+	ImageView logoutImage;
+	@FXML
+	Label userLabel;
 	private String id;
-	public ZSMDPController(String id) {
+	private String username;
+	public ZSMDPController(String id,String username) {
 		this.id=id;
+		this.username=username;
 	}
 	public ZSMDPController() {
 		
@@ -67,9 +75,13 @@ public class ZSMDPController implements Initializable {
 	        stage.setTitle(id);
 	        stage.show();
 	}
+	@FXML 
+	private void logout(MouseEvent e) {
+		System.exit(0);
+	}
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO Auto-generated method stub
+		userLabel.setText(username);
 		
 	}
 }

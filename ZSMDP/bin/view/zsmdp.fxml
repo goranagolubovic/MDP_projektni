@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -7,8 +8,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -50,24 +52,72 @@
    <children>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: cd743f;" GridPane.columnSpan="23" GridPane.rowSpan="11">
          <children>
-            <VBox layoutX="33.0" layoutY="53.0" prefHeight="54.0" prefWidth="58.0">
+            <VBox layoutX="33.0" layoutY="119.0" prefHeight="54.0" prefWidth="58.0" />
+            <VBox layoutX="14.0" layoutY="190.0" prefHeight="54.0" prefWidth="58.0">
                <children>
-                  <ImageView fx:id="viewTimeImage" fitHeight="54.0" fitWidth="87.0" onMouseClicked="#viewTime" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../images/driving.png" />
-                     </image>
-                  </ImageView>
+                  <AnchorPane prefHeight="446.0" prefWidth="385.0">
+                     <children>
+                        <ImageView fitHeight="446.0" fitWidth="402.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/template1.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="viewTimeImage" fitHeight="54.0" fitWidth="87.0" layoutX="61.0" layoutY="87.0" onMouseClicked="#viewTime" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/driving.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="addTimeImage" fitHeight="54.0" fitWidth="58.0" layoutX="61.0" layoutY="149.0" onMouseClicked="#addTime" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/add.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="54.0" fitWidth="58.0" layoutX="61.0" layoutY="214.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/notice.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="54.0" fitWidth="58.0" layoutX="61.0" layoutY="279.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/report.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="logoutImage" fitHeight="54.0" fitWidth="58.0" layoutX="61.0" layoutY="342.0" onMouseClicked="#logout" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/logout.png" />
+                           </image>
+                        </ImageView>
+                        <Label layoutX="120.0" layoutY="99.0" prefHeight="26.0" prefWidth="138.0" text="Pregledaj red vožnje" />
+                        <Label layoutX="121.0" layoutY="163.0" prefHeight="26.0" prefWidth="194.0" text="Evidentiraj prolazak voza" />
+                        <Label layoutX="120.0" layoutY="225.0" prefHeight="26.0" prefWidth="164.0" text="Pošalji obavještenje" />
+                        <Label layoutX="120.0" layoutY="289.0" prefHeight="26.0" prefWidth="157.0" text="Pošalji izvještaj" />
+                        <Label layoutX="120.0" layoutY="361.0" prefHeight="18.0" prefWidth="109.0" text="Odjavi se" />
+                     </children>
+                  </AnchorPane>
                </children>
             </VBox>
-            <VBox layoutX="33.0" layoutY="119.0" prefHeight="54.0" prefWidth="58.0">
-               <children>
-                  <ImageView fx:id="addTimeImage" fitHeight="54.0" fitWidth="87.0" onMouseClicked="#addTime" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../images/add.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </VBox>
+            <VBox layoutX="33.0" layoutY="277.0" prefHeight="54.0" prefWidth="58.0" />
+            <ImageView fitHeight="190.0" fitWidth="340.0" layoutX="306.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../../images/template2.png" />
+               </image>
+            </ImageView>
+            <Label alignment="CENTER" layoutX="416.0" layoutY="59.0" prefHeight="35.0" prefWidth="138.0" text="-ZSMDP-" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="54.0" fitWidth="58.0" layoutX="80.0" layoutY="111.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/user.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="170.0" fitWidth="158.0" layoutX="134.0" layoutY="67.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../../images/template3.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="userLabel" layoutX="165.0" layoutY="130.0" prefHeight="26.0" prefWidth="82.0" text="label" />
          </children>
       </AnchorPane>
    </children>

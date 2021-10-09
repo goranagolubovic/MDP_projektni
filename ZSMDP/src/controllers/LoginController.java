@@ -5,9 +5,13 @@ import java.rmi.RemoteException;
 
 import javax.xml.rpc.ServiceException;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import model.User;
 import service.LoginService;
 import service.LoginServiceServiceLocator;
@@ -36,14 +40,24 @@ public class LoginController {
 			e2.printStackTrace();
 		}
 			if(user!=null) {
-				
-			System.out.println("Uspjesno prijavljen!");
-			System.out.println(user.getId());
 			final User finalUser = user;
-
 			}
 			else {
-				System.out.println("Neuspjesno prijavljen!");
+				Platform.runLater(new Runnable() {
+				      public void run() {
+				          Alert alert = new Alert(Alert.AlertType.ERROR);
+				          alert.setTitle("");
+				          VBox a = new VBox();
+				          	a.setStyle("-fx-background-color:  #cdaf3f");
+				            a.setPrefHeight(100);
+				            a.setPrefWidth(100);
+				             Label label = new Label("Netačno korisničko ime ili lozinka!");
+				             label.setStyle("-fx-text-fill:  #ffffff");
+				             a.getChildren().add(label);
+				             alert.getDialogPane().setContent(a);
+					         alert.showAndWait();
+				      }
+				    });
 			}
 	}
 }

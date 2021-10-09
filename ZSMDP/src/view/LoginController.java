@@ -50,7 +50,7 @@ public class LoginController implements Initializable{
 			System.out.println("Uspjesno prijavljen!");
 			final User finalUser = user;
 			FXMLLoader loader=new FXMLLoader(getClass().getResource("/view/zsmdp.fxml"));
-			ZSMDPController zsmdpController=new ZSMDPController(finalUser.getId());
+			ZSMDPController zsmdpController=new ZSMDPController(finalUser.getId(),finalUser.getUsername());
 			loader.setController(zsmdpController);
 			try {
 				Parent root = (Parent) loader.load();
