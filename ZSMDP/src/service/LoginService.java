@@ -9,4 +9,6 @@ package service;
 
 public interface LoginService extends java.rmi.Remote {
     public model.User login(java.lang.String user, java.lang.String password) throws java.rmi.RemoteException;
+    public java.lang.String[] getUsersForSelectedStation(java.lang.String station) throws java.rmi.RemoteException;
+    public java.lang.String[] getStations() throws java.rmi.RemoteException;
 }

@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 
 import javax.xml.rpc.ServiceException;
 
+import control.LogginSingleton;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -40,6 +41,7 @@ public class LoginController {
 			e2.printStackTrace();
 		}
 			if(user!=null) {
+				LogginSingleton.getInstance().getActiveUsers().add(user.getUsername());
 			final User finalUser = user;
 			}
 			else {

@@ -37,7 +37,11 @@
    <ns3:parameter qname="ns1:user" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
    <ns3:parameter qname="ns1:password" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
   </ns3:operation>
-  <ns1:parameter name="allowedMethods" value="login"/>
+  <ns1:operation name="getUsersForSelectedStation" qname="ns3:getUsersForSelectedStation" returnQName="ns3:getUsersForSelectedStationReturn" returnType="xsd:string" soapAction="" xmlns:ns3="http://service" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <ns1:parameter qname="ns3:station" type="xsd:string"/>
+  </ns1:operation>
+  <ns1:operation name="getStations" qname="ns4:getStations" returnQName="ns4:getStationsReturn" returnType="xsd:string" soapAction="" xmlns:ns4="http://service" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+  <ns1:parameter name="allowedMethods" value="getUsersForSelectedStation getStations login"/>
   <ns1:parameter name="typeMappingVersion" value="1.2"/>
   <ns1:parameter name="wsdlPortType" value="LoginService"/>
   <ns1:parameter name="className" value="service.LoginService"/>
@@ -45,7 +49,7 @@
   <ns1:parameter name="schemaQualified" value="http://model,http://service"/>
   <ns1:parameter name="wsdlTargetNamespace" value="http://service"/>
   <ns1:parameter name="wsdlServiceElement" value="LoginServiceService"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns3:User" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:model.User" xmlns:ns3="http://model"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns5:User" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:model.User" xmlns:ns5="http://model"/>
  </ns1:service>
  <ns1:transport name="http">
   <ns1:requestFlow>

@@ -20,6 +20,30 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      </sequence>
     </complexType>
    </element>
+   <element name="getUsersForSelectedStation">
+    <complexType>
+     <sequence>
+      <element name="station" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getUsersForSelectedStationResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="getUsersForSelectedStationReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getStations">
+    <complexType/>
+   </element>
+   <element name="getStationsResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="getStationsReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
   </schema>
   <schema elementFormDefault="qualified" targetNamespace="http://model" xmlns="http://www.w3.org/2001/XMLSchema">
    <complexType name="User">
@@ -48,6 +72,38 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
    </wsdl:message>
 
+   <wsdl:message name="getStationsResponse">
+
+      <wsdl:part element="impl:getStationsResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getUsersForSelectedStationResponse">
+
+      <wsdl:part element="impl:getUsersForSelectedStationResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getUsersForSelectedStationRequest">
+
+      <wsdl:part element="impl:getUsersForSelectedStation" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getStationsRequest">
+
+      <wsdl:part element="impl:getStations" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
    <wsdl:portType name="LoginService">
 
       <wsdl:operation name="login">
@@ -57,6 +113,30 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
        </wsdl:input>
 
          <wsdl:output message="impl:loginResponse" name="loginResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getUsersForSelectedStation">
+
+         <wsdl:input message="impl:getUsersForSelectedStationRequest" name="getUsersForSelectedStationRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getUsersForSelectedStationResponse" name="getUsersForSelectedStationResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getStations">
+
+         <wsdl:input message="impl:getStationsRequest" name="getStationsRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getStationsResponse" name="getStationsResponse">
 
        </wsdl:output>
 
@@ -79,6 +159,42 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
          </wsdl:input>
 
          <wsdl:output name="loginResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getUsersForSelectedStation">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getUsersForSelectedStationRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getUsersForSelectedStationResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getStations">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getStationsRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getStationsResponse">
 
             <wsdlsoap:body use="literal"/>
 

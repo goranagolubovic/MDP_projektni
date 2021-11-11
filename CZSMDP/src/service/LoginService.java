@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 import control.XMLSerializer;
 import model.User;
@@ -30,5 +32,32 @@ public class LoginService {
 			}
 		}
 		return null;
+	}
+	public String[] getStations(){
+		int dim=XMLSerializer.deserializeWithXML().length;
+		List<String>stations=new ArrayList<>();
+		User[] users=XMLSerializer.deserializeWithXML();
+		int i=0;
+		while(i<users.length) {
+			User u=users[i];
+			 if(stations.contains(u.getId())) {
+					i++;
+				}
+				else {
+					stations.add(users[i].getId());
+					i++;
+				}
+			}
+		return stations.toArray(new String[stations.size()]);
+	}
+	public String[] getUsersForSelectedStation(String station) {
+		List<String>usersName=new ArrayList<>();
+		User[] users=XMLSerializer.deserializeWithXML();
+		for(int i=0;i<users.length;i++) {
+			if(users[i].getId().equals(station)) {
+				usersName.add(users[i].getUsername());
+			}
+		}
+		return usersName.toArray(new String[usersName.size()]);
 	}
 }

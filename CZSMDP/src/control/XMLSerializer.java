@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import model.User;
@@ -89,6 +91,25 @@ public static User deserializeWithXML(String XMLuser) {
 			
 			return null;
 			
+	}
+	public static User[] deserializeWithXML() {
+		XMLDecoder  decoder;
+		List<User> users=new ArrayList<>();
+		File folder = new File("C:\\Users\\goran\\Desktop\\MDP-projektni\\XMLfiles");
+		File[] listOfFiles = folder.listFiles();
+		for (int i = 0; i < listOfFiles.length; i++) {
+			File f=new File(listOfFiles[i].getAbsolutePath());
+			try {
+				decoder = new XMLDecoder(new FileInputStream(f));
+				User user=(User) decoder.readObject();
+				decoder.close();
+				users.add(user);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return users.toArray(new User[users.size()]);
 	}
   
 

@@ -24,7 +24,12 @@
         <parameter qname="pns:user" xmlns:pns="http://service" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
         <parameter qname="pns:password" xmlns:pns="http://service" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
       </operation>
-      <parameter name="allowedMethods" value="login"/>
+      <operation name="getUsersForSelectedStation" qname="operNS:getUsersForSelectedStation" xmlns:operNS="http://service" returnQName="retNS:getUsersForSelectedStationReturn" xmlns:retNS="http://service" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="pns:station" xmlns:pns="http://service" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="getStations" qname="operNS:getStations" xmlns:operNS="http://service" returnQName="retNS:getStationsReturn" xmlns:retNS="http://service" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+      </operation>
+      <parameter name="allowedMethods" value="getUsersForSelectedStation getStations login"/>
 
       <typeMapping
         xmlns:ns="http://model"
