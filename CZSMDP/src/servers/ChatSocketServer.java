@@ -31,7 +31,6 @@ public class ChatSocketServer {
 	
 	
 	public static void main(String[] args) {
-	
 		try {
 			// slusaj zahteve na datom portu
 			System.setProperty("javax.net.ssl.keyStore", KEY_STORE_PATH);
@@ -41,8 +40,6 @@ public class ChatSocketServer {
 			ServerSocket ss = ssf.createServerSocket(AUTH_SERVER_PORT);
 			System.out.println("Chat Server running...");
 		
-			
-
 			while (work) {
 				// prihvataj klijente
 				SSLSocket s = (SSLSocket) ss.accept();

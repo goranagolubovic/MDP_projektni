@@ -1,0 +1,85 @@
+Svaki učesnik u komunikaciji ima par ključeva, privatni i javni ključ.
+Privatni i javni ključ se koriste za asimentričnu enkripciju.
+Nešto kriptovano javnim ključem može se dekriptovati samo privatnim, i obrnuto, nešto kriptovano privatnim ključem može se dekriptovati samo javnim.
+
+Asimetrična enkripcija je spora, koristi se digitalna anvelopa.
+Digitalna anvelopa je postupak generisanja simetričnog ključa koji se kriptuje javnim ključem primaoca.
+Pošto se simetrični ključ kriptuje javnim ključem primaoca, samo ga primalac može dekriptovati pošto jedini posjeduje odgovarajući privatni ključ.
+Nakon što se simetrični ključ razmjeni, podaci se kriptuju njime.
+
+Legenda:
+PubK- Javni ključ
+PrivK - Privatni ključ
+CA - Certification authority, CA tijelo, izdaje sertifikate, posjeduje JK i PK
+
+ENC(1, 2), funkcija koja predstavlja, 1 se kriptuje sa 2
+
+Postupak razmjene
+Učesnici, Alice i Bob
+
+[Korak 0]
+=======================================================================
+[Mora postojati način za razmjenu javnih ključeva]
+
+Alice posjeduje:
+PrivK_Alice (Privatni ključ od Alice)
+PubK_Alice (Javni ključ od Alice)
+CA_Cert_Alice (Sertifikat od Alice koji je izdao CA)
+CA_Cert_CA (samopotpisan sertifikat CA tijela)
+CA_Cert_Bob
+
+Bob posjeduje:
+PrivK_Bob (Privatni ključ od Boba)
+PubK_Bob (Javni ključ od Boba)
+CA_Cert_Bob (Sertifikat od Boba koji je izdao CA)
+CA_Cert_CA (Opet isti)
+CA_Cert_Alice
+
+Alice hoće Bobu da pošalje podatke.
+
+[Slanje]
+=======================================================================
+Alice provjerava validnost Bobovog sertifikata pomoću sertifikata od CA. Ovako je sigurna da posjeduje Bobov stvarni javni ključ.
+Alice provjerava validnost trajanja Bobovog sertifikata pomoću CRL liste (google).
+Ukoliko bilo koja provjera padne, postupak se prekida.
+
+Alice generiše simetrični ključ. Radi ENC(SK, PubK_Bob). Izlaz je kriptovan simetrični ključ. Enkripcijom simetričnog ključa Bobovim javnim ključem
+osigurava da je Bob jedina osoba koja može dekriptovati simetrični ključ.
+Računa hash otisak podataka.
+
+Alice sad posjeduje prethodno navedeno plus:
+Podatke za slanje
+Simetrični ključ
+Kriptovan simetrični ključ
+
+Alice kriptuje hash otisak datoteke svojim privatnim ključem. Ovo je digitalni potpis. On se kriptuje simetričnim ključem.
+Podaci se kriptuju simetričnim ključem.
+Alice Bobu komunikacionim kanalom šalje sledeće. Kriptovan simetrični ključ, kriptovan digitalni potpis i kriptovane podatke.
+
+[Prijem]
+=======================================================================
+Bob prima podatke. Piše da su od Alice.
+Bob provjerava validnost Aliceinog sertifikata pomoću sertifikata od CA. Ovako je siguran da posjeduje Alicein stvarni javni ključ.
+Bob provjerava validnost trajanja Aliceinog sertifikata pomoću CRL liste (google).
+Ukoliko bilo koja provjera padne, postupak se prekida.
+
+Bob posjeduje:
+Kriptovan simetrični ključ (Kriptovan njegovim javnim ključem)
+Kriptovan digitalni potpis (Kriptovan simetričnim ključem)
+Podatke kriptovane simetričnim ključem.
+
+Pošto Bob ima svoj privatni ključ, njime dekriptuje simetrični ključ.
+Simetričnim ključem dekriptuje digitalni potpis i podatke.
+Radi izračunavanje hash otiska datoteke. Otisak koji je dobio od Alice dekriptuje njenim javnim ključem.
+Ako se ova dva otiska poklapaju, podaci su stigli bez greške, i stvarno su došli od Alice.
+Ako se ne poklapaju, ili je došlo do izmjene podataka ili nisu došli od Alice. Prekida se prijem.
+
+Ako sve provjere prođu, primljeni podaci su sigurno došli od Alice, netaknuti, i smiju se koristiti.
+
+
+
+
+Posiljaocu A stize zahtjev za izdavanje sertifikata od klijenta B.nakon sto provjeri validnost tog sertifikata od B i svog,Posaljilaca A poruku kriptuje javnim kljucem primaoca B. Takodje,uz poruku salje i digitalni potpis koji je neka vrsta sigurnosti da je komunikacija protekla neometano odnosno da je B dobio originalnu poruku koja nije presretena i izmjenjena.primalac B poruku dekriptuje svojim privatnim kljucem.Napravi hash otisak te poruke.Nakon tog provjeri digitalni potpis dekriptujuci javnim kljucem posiljaoca A(taj kljuc je ugradjen u sertifikat koji je dosao od A) Ako se ta dva hasha poklapaju,poruka je validna i to je ona koju nam je zaista posla A.
+Takodje,i digitalni potpis moze biti izmjenjen u procesu prenosA.oNAJ KOJI ga je izmjenio moze da ubaci svoj javni kljuc.ali mi kao primalac cemo znati da nesto nije dobro jer necemo moci da dekriptujemo tu poruku svojim privatnim kljucem.
+
+napomena:na ispitu se moze desiti da ne dobijemo sve foldere ili datoteke koje  nam trebaju za pocetak rada sa sertifikatima.moramo ih prvo izgenerisati.

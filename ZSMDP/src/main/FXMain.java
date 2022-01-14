@@ -12,8 +12,6 @@ import javafx.stage.Stage;
 
 public class FXMain extends Application {
     @FXML
-    
-
     public static void main(String[] args)  {
         launch(args);
     }
