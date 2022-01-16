@@ -6,24 +6,32 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
+import java.util.stream.Collectors;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.xml.rpc.ServiceException;
 
+import com.google.gson.Gson;
 import com.rabbitmq.client.impl.Environment;
 
+import control.LogginSingleton;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,10 +48,12 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -71,7 +81,8 @@ public class ZSMDPController implements Initializable {
 	TextField NewMessageTextField;
 	@FXML
 	TextArea messageTextArea;
-
+	@FXML
+	ScrollPane scrollPane;
 	private String id;
 	private String username;
 	private ChatClientSocket chatClientSocket;
@@ -80,14 +91,21 @@ public class ZSMDPController implements Initializable {
 
 	private String downloadFolder = "files";
 
+	boolean ready;
+	Map<String, String> userMessagesMap = new HashMap<>();
+	List<String> onlineUsers = new ArrayList<>();
+
+	private String notificationContent = "";
+
+	private static final int NOTIFICATION_PORT = 20000;
+	private static final String NOTIFICATION_HOST = "224.0.0.11";
+
 	public ZSMDPController(String id, String username) {
 		this.id = id;
 		this.username = username;
 		this.chatClientSocket = new ChatClientSocket(username);
+		onlineUsers.add(username);
 	}
-
-	boolean ready;
-	Map<String, String> userMessagesMap = new HashMap<>();
 
 	public ZSMDPController() {
 
@@ -108,6 +126,7 @@ public class ZSMDPController implements Initializable {
 			// Logger.getLogger(FXMain.class.getName()).log(Level.WARNING,
 			// e.fillInStackTrace().toString());
 		}
+		System.out.println(loader.getLocation());
 		Scene scene = new Scene(root);
 		Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
 		stage.setScene(scene);
@@ -153,10 +172,9 @@ public class ZSMDPController implements Initializable {
 			stations = log.getStations();
 			locationComboBox.getItems().addAll(stations);
 			locationComboBox.getSelectionModel().select(getIndexOfCurrentStation(stations));
-			initializeUserComboBox(null);
 			chatClientSocket.addSocketInMap(id);
-			// userComboBox.getItems().addListener(log.getUsersForSelectedStation(locationComboBox.getValue())
-			// ,userComboBox.getItems(),log.getUsersForSelectedStation(locationComboBox.getValue()));
+			initializeUserComboBox(null);
+			// userComboBox.getItems().addListener(log.getUsersForSelectedStation(locationComboBox.getValue()),userComboBox.getItems(),log.getUsersForSelectedStation(locationComboBox.getValue()));
 		} catch (ServiceException e1) {
 			e1.printStackTrace();
 		} catch (RemoteException e2) {
@@ -164,6 +182,35 @@ public class ZSMDPController implements Initializable {
 		}
 
 		listenForMessages();
+		listenForNotifications();
+	}
+
+	private void listenForNotifications() {
+		new Thread(() -> {
+			MulticastSocket socket = null;
+			byte[] buffer = new byte[256];
+			try {
+				socket = new MulticastSocket(NOTIFICATION_PORT);
+				InetAddress address = InetAddress.getByName(NOTIFICATION_HOST);
+				socket.joinGroup(address);
+				while (true) {
+					DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+					socket.receive(packet);
+					String received = new String(packet.getData(), 0, packet.getLength());
+					if (!received.startsWith(username)) {
+						notificationContent += received.split(":")[1] + "\n";
+						Text text = new Text();
+						text.setText(notificationContent);
+
+						Platform.runLater(() -> {
+							scrollPane.setContent(text);
+						});
+					}
+				}
+			} catch (IOException ioe) {
+				System.out.println(ioe);
+			}
+		}).start();
 	}
 
 	private int getIndexOfCurrentStation(String[] stations) {
@@ -172,19 +219,37 @@ public class ZSMDPController implements Initializable {
 
 	@FXML
 	public void initializeUserComboBox(ActionEvent e) {
-		LoginServiceServiceLocator locator = new LoginServiceServiceLocator();
-		LoginService log;
-		try {
-			log = locator.getLoginService();
-			userComboBox.getItems().clear();
-			userComboBox.getItems().addAll(log.getUsersForSelectedStation(locationComboBox.getValue()));
-		} catch (ServiceException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (RemoteException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
+		new Thread(() -> {
+			LoginServiceServiceLocator locator = new LoginServiceServiceLocator();
+			LoginService log;
+			PrintWriter out = chatClientSocket.out;
+			try {
+				log = locator.getLoginService();
+				userComboBox.getItems().clear();
+				out.println("SEND ONLINE USERS:" + id + "#" + username + ":" + locationComboBox.getValue());
+				BufferedReader in = chatClientSocket.in;
+				String msg;
+				try {
+					msg = in.readLine();
+					if (msg.startsWith("ONLINE USERS")) {
+						String users = msg.split(":")[1];
+						// List<String> onlineUsers=Arrays.asList(users.split("*"));
+						// List<String> olineUsersForSelectedStation=onlineUsers.stream()
+						// .filter(u->u.startsWith(locationComboBox.getValue()))
+						// .collect(Collectors.toList());
+						// Platform.runLater(()->{
+						userComboBox.getItems().addAll(users);
+						// });
+					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			} catch (ServiceException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+		}).start();
 
 	}
 
@@ -195,93 +260,95 @@ public class ZSMDPController implements Initializable {
 			while (true) {
 				try {
 					String msg = in.readLine();
+					if (!msg.startsWith("ONLINE USERS")) {
+						String senderInfo = msg.split(":")[1];
+						String senderId = senderInfo.split("#")[0];
+						String senderUsername = senderInfo.split("#")[1];
 
-					String senderInfo = msg.split(":")[1];
-					String senderId = senderInfo.split("#")[0];
-					String senderUsername = senderInfo.split("#")[1];
+						String receiverInfo = msg.split(":")[2];
+						String receiverId = receiverInfo.split("#")[0];
+						String receiverUsername = receiverInfo.split("#")[1];
 
-					String receiverInfo = msg.split(":")[2];
-					String receiverId = receiverInfo.split("#")[0];
-					String receiverUsername = receiverInfo.split("#")[1];
-
-					if (msg != null) {
-						// potvrdjivanje komunikacije sa korisnikom
-						if (msg.startsWith("CHAT")) {
-							Platform.runLater(() -> {
-								Alert alert = new Alert(AlertType.CONFIRMATION);
-								alert.setContentText("Da li želite da uspostavite komunikaciju sa korisnikom "
-										+ senderUsername + "?");
-								final Optional<ButtonType> result = alert.showAndWait();
-
-								if (result.get() == ButtonType.OK) {
-									new Thread(() -> {
-										System.out.println("Non-UI thread");
-										out.println("VALID CONNECTION:" + receiverInfo + ":" + senderInfo);
-										userMessagesMap.put(senderInfo, "");
-										ready = true;
-									}).start();
-									locationComboBox.setValue(senderId);
-									userComboBox.setValue(senderUsername);
-								}
-							});
-
-						} else if (msg.startsWith("VALID CONNECTION")) {
-							if (!userMessagesMap.containsKey(senderInfo)) {
-								userMessagesMap.put(senderInfo, "");
+						if (msg != null) {
+							// potvrdjivanje komunikacije sa korisnikom
+							if (msg.startsWith("CHAT")) {
 								Platform.runLater(() -> {
-									locationComboBox.setValue(senderId);
-									userComboBox.setValue(senderUsername);
+									Alert alert = new Alert(AlertType.CONFIRMATION);
+									alert.setContentText("Da li želite da uspostavite komunikaciju sa korisnikom "
+											+ senderUsername + "?");
+									final Optional<ButtonType> result = alert.showAndWait();
+
+									if (result.get() == ButtonType.OK) {
+										new Thread(() -> {
+											System.out.println("Non-UI thread");
+											out.println("VALID CONNECTION:" + receiverInfo + ":" + senderInfo);
+											userMessagesMap.put(senderInfo, "");
+											ready = true;
+										}).start();
+										locationComboBox.setValue(senderId);
+										userComboBox.setValue(senderUsername);
+									}
 								});
-							}
-							ready = true;
-						} else if (msg.startsWith("MESSAGE")) {
-							String newMessage = senderUsername + ": " + msg.split(":")[3] + "\n";
-							final String messages = userMessagesMap.get(senderInfo) + newMessage;
-							userMessagesMap.replace(senderInfo, messages);
-							Platform.runLater(() -> {
-								messageTextArea.setText(userMessagesMap.get(senderInfo));
-							});
-						} else if (msg.startsWith("FILE")) {
-							Wrapper wrapper = new Wrapper();
-							String fileName = msg.split(":")[3];
-							String fileContent = msg.split(":")[4];
-							byte[] fileContentBytes = Base64.getDecoder().decode(fileContent);
-							String newMessage = senderUsername + ": " + fileName + "\n";
-							final String messages = userMessagesMap.get(senderInfo) + newMessage;
-							userMessagesMap.replace(senderInfo, messages);
-							CountDownLatch countDownLatch = new CountDownLatch(1);
-							Platform.runLater(() -> {
-								Alert a = new Alert(AlertType.CONFIRMATION);
-								a.setContentText("Da li želite da preuzmete fajl " + fileName + "?");
-								final Optional<ButtonType> result = a.showAndWait();
-								if (result.get() == ButtonType.OK) {
-									wrapper.value = true;
-									messageTextArea.setText(userMessagesMap.get(senderInfo));
-								}
-								countDownLatch.countDown();
-							});
-							try {
-								countDownLatch.await();
-							} catch (InterruptedException e1) {
-								e1.printStackTrace();
-							}
-							if (wrapper.value) {
-								String filePath = downloadFolder + File.separator + receiverUsername;
-								File file = new File(filePath);
-								if (!file.exists()) {
-									file.mkdir();
-								}
-								try {
-									Files.write(Paths.get(filePath + File.separator + fileName), fileContentBytes);
+
+							} else if (msg.startsWith("VALID CONNECTION")) {
+								if (!userMessagesMap.containsKey(senderInfo)) {
+									userMessagesMap.put(senderInfo, "");
 									Platform.runLater(() -> {
-										Alert a = new Alert(AlertType.INFORMATION);
-										a.setContentText("Uspješno ste preuzeli fajl " + fileName);
-										a.show();
+										locationComboBox.setValue(senderId);
+										userComboBox.setValue(senderUsername);
 									});
-								} catch (IOException e) {
-									e.printStackTrace();
+								}
+								ready = true;
+							} else if (msg.startsWith("MESSAGE")) {
+								String newMessage = senderUsername + ": " + msg.split(":")[3] + "\n";
+								final String messages = userMessagesMap.get(senderInfo) + newMessage;
+								userMessagesMap.replace(senderInfo, messages);
+								Platform.runLater(() -> {
+									messageTextArea.setText(userMessagesMap.get(senderInfo));
+								});
+							} else if (msg.startsWith("FILE")) {
+								Wrapper wrapper = new Wrapper();
+								String fileName = msg.split(":")[3];
+								String fileContent = msg.split(":")[4];
+								byte[] fileContentBytes = Base64.getDecoder().decode(fileContent);
+								String newMessage = senderUsername + ": " + fileName + "\n";
+								final String messages = userMessagesMap.get(senderInfo) + newMessage;
+								userMessagesMap.replace(senderInfo, messages);
+								CountDownLatch countDownLatch = new CountDownLatch(1);
+								Platform.runLater(() -> {
+									Alert a = new Alert(AlertType.CONFIRMATION);
+									a.setContentText("Da li želite da preuzmete fajl " + fileName + "?");
+									final Optional<ButtonType> result = a.showAndWait();
+									if (result.get() == ButtonType.OK) {
+										wrapper.value = true;
+										messageTextArea.setText(userMessagesMap.get(senderInfo));
+									}
+									countDownLatch.countDown();
+								});
+								try {
+									countDownLatch.await();
+								} catch (InterruptedException e1) {
+									e1.printStackTrace();
+								}
+								if (wrapper.value) {
+									String filePath = downloadFolder + File.separator + receiverUsername;
+									File file = new File(filePath);
+									if (!file.exists()) {
+										file.mkdir();
+									}
+									try {
+										Files.write(Paths.get(filePath + File.separator + fileName), fileContentBytes);
+										Platform.runLater(() -> {
+											Alert a = new Alert(AlertType.INFORMATION);
+											a.setContentText("Uspješno ste preuzeli fajl " + fileName);
+											a.show();
+										});
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
 								}
 							}
+
 						}
 					}
 				} catch (IOException e) {
@@ -357,6 +424,29 @@ public class ZSMDPController implements Initializable {
 		if (file != null) {
 			NewMessageTextField.setText(file.getAbsolutePath());
 		}
+	}
+
+	@FXML
+	private void sendNotification(MouseEvent e) {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/notification.fxml"));
+		Parent root = null;
+		NotificationController notificationController = new NotificationController(viewTimeImage.getScene(), id,username);
+		loader.setController(notificationController);
+		try {
+			root = loader.load();
+
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			// Logger.getLogger(FXMain.class.getName()).addHandler(MainPageController.handler);
+			// Logger.getLogger(FXMain.class.getName()).log(Level.WARNING,
+			// e.fillInStackTrace().toString());
+		}
+		Scene scene = new Scene(root);
+		scene.getStylesheets().add("/view/style.css");
+		Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+		stage.setScene(scene);
+		stage.setTitle(id);
+		stage.show();
 	}
 
 	class Wrapper {

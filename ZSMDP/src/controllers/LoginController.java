@@ -1,25 +1,36 @@
 package controllers;
 
 import java.awt.EventQueue;
+import java.io.IOException;
+import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.ResourceBundle;
 
 import javax.xml.rpc.ServiceException;
+
+import com.sun.corba.se.impl.orbutil.graph.Node;
 
 import control.LogginSingleton;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import model.User;
 import service.LoginService;
 import service.LoginServiceServiceLocator;
 import views.ZSMDPWindow;
 
 
-public class LoginController {
+public class LoginController implements Initializable{
 	@FXML
 	private TextField userNameTextField;
 	@FXML
@@ -27,7 +38,7 @@ public class LoginController {
 	 public LoginController() {
 	    }
 	@FXML
-	public void login(ActionEvent e) {
+	public void login(MouseEvent e) {
 		User user=null;
 		LoginServiceServiceLocator locator=new LoginServiceServiceLocator();
 		try {
@@ -41,25 +52,31 @@ public class LoginController {
 			e2.printStackTrace();
 		}
 			if(user!=null) {
-				LogginSingleton.getInstance().getActiveUsers().add(user.getUsername());
-			final User finalUser = user;
-			}
-			else {
-				Platform.runLater(new Runnable() {
-				      public void run() {
-				          Alert alert = new Alert(Alert.AlertType.ERROR);
-				          alert.setTitle("");
-				          VBox a = new VBox();
-				          	a.setStyle("-fx-background-color:  #cdaf3f");
-				            a.setPrefHeight(100);
-				            a.setPrefWidth(100);
-				             Label label = new Label("Netačno korisničko ime ili lozinka!");
-				             label.setStyle("-fx-text-fill:  #ffffff");
-				             a.getChildren().add(label);
-				             alert.getDialogPane().setContent(a);
-					         alert.showAndWait();
-				      }
-				    });
-			}
+				System.out.println("Uspjesno prijavljen!");
+				final User finalUser = user;
+				FXMLLoader loader=new FXMLLoader(getClass().getResource("/view/zsmdp.fxml"));
+				ZSMDPController zsmdpController=new ZSMDPController(finalUser.getId(),finalUser.getUsername());
+				loader.setController(zsmdpController);
+				try {
+					Parent root = (Parent) loader.load();
+					Scene scene = new Scene(root);
+			       // Stage stage = (Stage) ((Stage) ((Node) e.getSource())).getScene().getWindow();
+					Stage stage= (Stage) userNameTextField.getScene().getWindow();
+			        stage.setScene(scene);
+			        stage.setTitle(finalUser.getId());
+			        stage.show();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				}
+				else {
+					System.out.println("Neuspjesno prijavljen!");
+				}
+	}
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		userNameTextField.setStyle("-fx-background-color: -fx-control-inner-background;");
+		passwordTextField.setStyle("-fx-background-color: -fx-control-inner-background;");
 	}
 }

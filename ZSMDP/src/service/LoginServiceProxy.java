@@ -50,16 +50,16 @@ public class LoginServiceProxy implements service.LoginService {
     return loginService.login(user, password);
   }
   
-  public java.lang.String[] getStations() throws java.rmi.RemoteException{
-    if (loginService == null)
-      _initLoginServiceProxy();
-    return loginService.getStations();
-  }
-  
   public java.lang.String[] getUsersForSelectedStation(java.lang.String station) throws java.rmi.RemoteException{
     if (loginService == null)
       _initLoginServiceProxy();
     return loginService.getUsersForSelectedStation(station);
+  }
+  
+  public java.lang.String[] getStations() throws java.rmi.RemoteException{
+    if (loginService == null)
+      _initLoginServiceProxy();
+    return loginService.getStations();
   }
   
   
