@@ -11,7 +11,6 @@ import control.XMLSerializer;
 import model.User;
 
 public class LoginService {
-
 		private final static String alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		{
 		for(int i=1;i<=4;i++) {
@@ -24,8 +23,9 @@ public class LoginService {
 		if(u!=null) {
 			try {
 				if(user.equals(u.getUsername()) && 
-						User.toHexString(User.getSHA(String.valueOf(password))).equals(u.getPassword()))
+						User.toHexString(User.getSHA(String.valueOf(password))).equals(u.getPassword())) {
 				return u;
+				}
 			} catch (NoSuchAlgorithmException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -55,9 +55,9 @@ public class LoginService {
 		User[] users=XMLSerializer.deserializeWithXML();
 		for(int i=0;i<users.length;i++) {
 			if(users[i].getId().equals(station)) {
-				usersName.add(users[i].getUsername());
+						usersName.add(users[i].getUsername());
+				}
 			}
-		}
 		return usersName.toArray(new String[usersName.size()]);
 	}
 }

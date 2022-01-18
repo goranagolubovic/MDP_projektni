@@ -111,6 +111,23 @@ public static User deserializeWithXML(String XMLuser) {
 		}
 		return users.toArray(new User[users.size()]);
 	}
-  
+	public static boolean deleteUser(String XMLuser) {
+		File f=new File("C:\\Users\\goran\\Desktop\\MDP-projektni\\XMLfiles"+File.separator+XMLuser);
+		
+		if(f.exists()) {
+			f.delete();
+			return true;
+		}
+		return false;
+	}
+  public static String showAllUsers() {
+	  String allUsers="";
+	  File folder = new File("C:\\Users\\goran\\Desktop\\MDP-projektni\\XMLfiles");
+		File[] listOfFiles = folder.listFiles();
+		for (int i = 0; i < listOfFiles.length; i++) {
+			allUsers+=listOfFiles[i].getName()+"\n";
+		}
+		return allUsers;
+  }
 
 }

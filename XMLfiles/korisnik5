@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="15.0.1" class="java.beans.XMLDecoder">
+ <object class="model.User">
+  <void property="id">
+   <string>A</string>
+  </void>
+  <void property="password">
+   <string>63ee957ee5e141b69d6cd2910d10b0c773d7b1d84a2c04e1624383dd8326928d</string>
+  </void>
+  <void property="username">
+   <string>korisnik5</string>
+  </void>
+ </object>
+</java>

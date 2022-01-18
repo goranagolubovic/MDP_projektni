@@ -22,7 +22,7 @@ public class ChatSocketServer {
 	public static int TCP_PORT=9000;
 	public static String AUTH_SERVER_IP="127.0.0.1";
 	public static int AUTH_SERVER_PORT=8443;
-
+	
 	
 	public static boolean work = true;
 	public static ServerSocket ss;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -75,5 +76,13 @@ public class LineService {
 		}
 		return Response.status(404).build();
 	}
-	
+	@DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}")
+    public Response deleteLine(@PathParam("id") String id){
+		if (redis.deleteLine(id)) {
+			return Response.noContent().build();
+		}
+		return Response.status(404).build();     
+    }
 }

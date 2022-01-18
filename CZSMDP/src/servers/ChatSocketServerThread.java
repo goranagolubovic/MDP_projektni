@@ -5,10 +5,19 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.net.ssl.SSLSocket;
+
+import com.google.gson.Gson;
+
+import database.RedisDatabase;
+import redis.clients.jedis.Jedis;
 
 public class ChatSocketServerThread extends Thread {
 
@@ -16,7 +25,8 @@ public class ChatSocketServerThread extends Thread {
 	private BufferedReader in;
 	private PrintWriter out;
 	private static Map<String, SSLSocket> clients = new HashMap<String, SSLSocket>();
-
+	private Gson gson=new Gson();
+	private Jedis jedis=new Jedis("localhost",8081);
 	public ChatSocketServerThread(SSLSocket sock) {
 		this.sock = sock;
 		try {
@@ -53,12 +63,29 @@ public class ChatSocketServerThread extends Thread {
 					System.out.println("User " + senderUsername + " conected...");
 					continue;
 				}
+				if(request.startsWith("SEND ONLINE USERS")) {
+					Set<String> clientsInfo=clients.keySet();
+					String station=request.split(":")[2];
+					List<String>onlineUsersInStation=clientsInfo.stream()
+								.filter(elem->elem.startsWith(station))
+								.map(el->el.split("#")[1])
+								.collect(Collectors.toList());
+					SSLSocket userSocket=clients.get(senderInfo);
+					PrintWriter pw = new PrintWriter(userSocket.getOutputStream(), true);
+					String usersOnline="";
+					for(String u:onlineUsersInStation) {
+						usersOnline+=u+"\n";
+					}
+					pw.println("ONLINE USERS:"+usersOnline.substring(0,usersOnline.length()-1));
+					continue;
+				}
 
 				String receiverInfo = request.split(":")[2];
 				SSLSocket userSocket = clients.get(receiverInfo);
 				PrintWriter pw = new PrintWriter(userSocket.getOutputStream(), true);
 				pw.println(request);
 			}
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
