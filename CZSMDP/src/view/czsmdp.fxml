@@ -73,7 +73,7 @@
             <Label layoutX="200.0" layoutY="288.0" text="Pregledaj korisnike" />
             <ImageView fitHeight="75.0" fitWidth="57.0" layoutX="137.0" layoutY="336.0" onMouseClicked="#viewTimeSchedule" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../ZSMDP/images/view-schedule.png" />
+                  <Image url="@../../../ZSMDP/images/view-timetable.png" />
                </image>
             </ImageView>
             <Label layoutX="202.0" layoutY="356.0" text="Pregledaj red vožnje" />
@@ -83,6 +83,30 @@
                </image>
             </ImageView>
             <Label layoutX="201.0" layoutY="425.0" prefHeight="18.0" prefWidth="84.0" text="Obriši liniju" />
+            <ImageView fitHeight="68.0" fitWidth="57.0" layoutX="137.0" layoutY="478.0" onMouseClicked="#createSchedule" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../ZSMDP/images/view-schedule.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="202.0" layoutY="498.0" text="Kreiraj red vožnje" />
+            <ImageView fx:id="viewNotificationsImageView" fitHeight="57.0" fitWidth="57.0" layoutX="320.0" layoutY="128.0" onMouseClicked="#viewNotifications" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../ZSMDP/images/bell.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="387.0" layoutY="147.0" text="Pregledaj obavještenja" />
+            <ImageView fitHeight="57.0" fitWidth="66.0" layoutX="320.0" layoutY="202.0" onMouseClicked="#downloadReport" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../ZSMDP/images/download-file.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="387.0" layoutY="214.0" text="Preuzmi izvješstaj" />
+            <ImageView fitHeight="57.0" fitWidth="64.0" layoutX="321.0" layoutY="277.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../ZSMDP/images/open-file.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="387.0" layoutY="295.0" text="Pregledaj izvještaj" />
          </children>
       </AnchorPane>
    </children>

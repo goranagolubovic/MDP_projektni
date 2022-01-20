@@ -20,6 +20,18 @@ public class RedisDatabase {
 	
 	private RedisDatabaseSingleton singleton;
 	private Jedis jedis;
+	public Jedis getJedis() {
+		return jedis;
+	}
+	public void setJedis(Jedis jedis) {
+		this.jedis = jedis;
+	}
+	public Gson getGson() {
+		return gson;
+	}
+	public void setGson(Gson gson) {
+		this.gson = gson;
+	}
 	private Gson gson;
 	public RedisDatabase() {
 		singleton=RedisDatabaseSingleton.getInstance();
@@ -60,7 +72,7 @@ public class RedisDatabase {
 					.collect(Collectors.toList());
 	}
 
-	public boolean update(Line line,String id) {
+	public boolean update(String id,Line line) {
 		/*StationTime stationtime=null;
 		for(StationTime st:line.getStations()) {
 			if(id.equals(st.getStation())) {
@@ -68,10 +80,11 @@ public class RedisDatabase {
 				break;
 			}
 		}*/
-		if(jedis.set(line.getSign(),gson.toJson(line))!=null) {
-		return true;
-		}
-		else
+		String res = jedis.set(id, gson.toJson(line));
+		System.out.println(res);
+		if ("OK".equals(res)) {
+			return true;
+		} else
 			return false;
 	}
 	public boolean deleteLine(String id) {

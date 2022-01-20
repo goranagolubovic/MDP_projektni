@@ -76,14 +76,30 @@ public class ChatSocketServerThread extends Thread {
 					for(String u:onlineUsersInStation) {
 						usersOnline+=u+"\n";
 					}
+					if(usersOnline.length()!=0) {
 					pw.println("ONLINE USERS:"+usersOnline.substring(0,usersOnline.length()-1));
+					}
+					else {
+						pw.println("ONLINE USERS:"+"empty");
+					}
+					continue;
+				}
+				if(request.startsWith("EXIT")) {
+					clients.remove(senderInfo);
 					continue;
 				}
 
 				String receiverInfo = request.split(":")[2];
-				SSLSocket userSocket = clients.get(receiverInfo);
-				PrintWriter pw = new PrintWriter(userSocket.getOutputStream(), true);
+				SSLSocket receiverSocket = clients.get(receiverInfo);
+				if(receiverSocket!=null) {
+				PrintWriter pw = new PrintWriter(receiverSocket.getOutputStream(), true);
 				pw.println(request);
+				}
+				else {
+					SSLSocket senderSocket = clients.get(senderInfo);
+					PrintWriter pw = new PrintWriter(senderSocket.getOutputStream(), true);
+					pw.println("NOT CONNECTED:"+senderInfo.split("#")[1]);
+				}
 			}
 
 		} catch (Exception ex) {

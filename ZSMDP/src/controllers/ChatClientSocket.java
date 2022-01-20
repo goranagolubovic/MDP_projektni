@@ -60,10 +60,6 @@ public class ChatClientSocket {
 		public void addSocketInMap(String id) {
 			out.println("ADD SOCKET:"+(id+"#"+clientUsername));
 		}
-	    public static void endSession() {
-	    	out.println("END");
-	    }
-
 	    public static void sendMessage(String msg,String username,boolean isMessageFile) {
 	        try {
 	        	/*

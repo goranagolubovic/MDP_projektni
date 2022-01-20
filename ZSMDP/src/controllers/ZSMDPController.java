@@ -8,11 +8,21 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.MulticastSocket;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -59,6 +69,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.User;
 import redis.clients.jedis.exceptions.JedisConnectionException;
+import server.AZSMDPInterface;
+import server.Report;
 import service.LoginService;
 import service.LoginServiceServiceLocator;
 
@@ -158,7 +170,8 @@ public class ZSMDPController implements Initializable {
 
 	@FXML
 	private void logout(MouseEvent e) {
-		this.chatClientSocket.endSession();
+		PrintWriter out = chatClientSocket.out;
+		out.println("EXIT:"+id+"#"+username);
 		System.exit(0);
 	}
 
@@ -226,24 +239,8 @@ public class ZSMDPController implements Initializable {
 			try {
 				log = locator.getLoginService();
 				userComboBox.getItems().clear();
+				userComboBox.setValue("");
 				out.println("SEND ONLINE USERS:" + id + "#" + username + ":" + locationComboBox.getValue());
-				BufferedReader in = chatClientSocket.in;
-				String msg;
-				try {
-					msg = in.readLine();
-					if (msg.startsWith("ONLINE USERS")) {
-						String users = msg.split(":")[1];
-						// List<String> onlineUsers=Arrays.asList(users.split("*"));
-						// List<String> olineUsersForSelectedStation=onlineUsers.stream()
-						// .filter(u->u.startsWith(locationComboBox.getValue()))
-						// .collect(Collectors.toList());
-						// Platform.runLater(()->{
-						userComboBox.getItems().addAll(users);
-						// });
-					}
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
 			} catch (ServiceException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -260,16 +257,36 @@ public class ZSMDPController implements Initializable {
 			while (true) {
 				try {
 					String msg = in.readLine();
-					if (!msg.startsWith("ONLINE USERS")) {
-						String senderInfo = msg.split(":")[1];
-						String senderId = senderInfo.split("#")[0];
-						String senderUsername = senderInfo.split("#")[1];
-
-						String receiverInfo = msg.split(":")[2];
-						String receiverId = receiverInfo.split("#")[0];
-						String receiverUsername = receiverInfo.split("#")[1];
-
 						if (msg != null) {
+							if (msg.startsWith("ONLINE USERS")) {
+								String users = msg.split(":")[1];
+								// List<String> onlineUsers=Arrays.asList(users.split("*"));
+								// List<String> olineUsersForSelectedStation=onlineUsers.stream()
+								// .filter(u->u.startsWith(locationComboBox.getValue()))
+								// .collect(Collectors.toList());
+								// Platform.runLater(()->{
+								if(!"empty".equals(users)) {
+								userComboBox.getItems().addAll(users);
+								}
+								// });
+							}
+							else if (msg.startsWith("NOT CONNECTED")) {
+								Platform.runLater(() -> {
+									Alert alert=new Alert(AlertType.WARNING);
+									alert.setContentText("Korisnik "+msg.split(":")[1]+" nije aktivan.");
+									alert.showAndWait();
+								});
+
+							}
+							else {
+							String senderInfo = msg.split(":")[1];
+							String senderId = senderInfo.split("#")[0];
+							String senderUsername = senderInfo.split("#")[1];
+
+							String receiverInfo = msg.split(":")[2];
+							String receiverId = receiverInfo.split("#")[0];
+							String receiverUsername = receiverInfo.split("#")[1];
+
 							// potvrdjivanje komunikacije sa korisnikom
 							if (msg.startsWith("CHAT")) {
 								Platform.runLater(() -> {
@@ -293,13 +310,14 @@ public class ZSMDPController implements Initializable {
 							} else if (msg.startsWith("VALID CONNECTION")) {
 								if (!userMessagesMap.containsKey(senderInfo)) {
 									userMessagesMap.put(senderInfo, "");
-									Platform.runLater(() -> {
+									/*Platform.runLater(() -> {
 										locationComboBox.setValue(senderId);
 										userComboBox.setValue(senderUsername);
-									});
+									});*/
 								}
 								ready = true;
-							} else if (msg.startsWith("MESSAGE")) {
+							}
+							else if (msg.startsWith("MESSAGE")) {
 								String newMessage = senderUsername + ": " + msg.split(":")[3] + "\n";
 								final String messages = userMessagesMap.get(senderInfo) + newMessage;
 								userMessagesMap.replace(senderInfo, messages);
@@ -448,9 +466,40 @@ public class ZSMDPController implements Initializable {
 		stage.setTitle(id);
 		stage.show();
 	}
+	@FXML
+	private void sendReport(MouseEvent e) {
+		String PATH = "resources";
+		FileChooser fc = new FileChooser();
+		File file = fc.showOpenDialog(addFileImageView.getScene().getWindow());
+		if (file != null && file.getName().endsWith(".pdf")) {
+			System.setProperty("java.security.policy", PATH + File.separator + "client_policyfile.txt");
+			if (System.getSecurityManager() == null) {
+				System.setSecurityManager(new SecurityManager());
+			}
 
+				try {
+					AZSMDPInterface azsmdpServer=(AZSMDPInterface) Naming.lookup("rmi://127.0.0.1:1099/AZSMDPServer");
+					try {
+						azsmdpServer.uploadReport(new Report(
+								file.getName(),
+								Files.readAllBytes(file.toPath()),
+								username,
+								LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss")),
+								file.length()
+						));
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				} catch (RemoteException | NotBoundException | MalformedURLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				//AZSMDPInterface onlineShop = (AZSMDPInterface)
+				
+	}
+	}
 	class Wrapper {
 		public boolean value;
 	}
-
 }

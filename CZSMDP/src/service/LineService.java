@@ -23,66 +23,65 @@ import model.Line;
 public class LineService {
 	RedisDatabase redis;
 	Gson gson;
+
 	public LineService() {
-		redis=new RedisDatabase();
-		gson=new Gson();
+		redis = new RedisDatabase();
+		gson = new Gson();
 	}
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllLines() {
 		return Response.ok(redis.getAllLines()).build();
 	}
-	
+
 	@GET
 	@Path("/{sign}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response get(@PathParam ("sign") String signOfStation) {
-		List<Line> lines=new ArrayList<>();
-		lines=redis.getLineFromDatbase(signOfStation);
-		if(!lines.isEmpty()) {
+	public Response get(@PathParam("sign") String signOfStation) {
+		List<Line> lines = new ArrayList<>();
+		lines = redis.getLineFromDatbase(signOfStation);
+		if (!lines.isEmpty()) {
 			return Response.status(200).entity(lines).build();
-		}
-		else {
-			return Response.status(404
-					).build();
+		} else {
+			return Response.status(404).build();
 		}
 	}
-	/*@Path("/{sign}")*/
+	/*
+	 * @Path("/{sign}")
+	 * 
+	 * @POST
+	 * 
+	 * @Consumes(MediaType.APPLICATION_JSON)
+	 * 
+	 * @Produces(MediaType.APPLICATION_JSON) public Response add(Line
+	 * line,@PathParam("sign") String sign) { if(redis.addLineInDatabase(line)) {
+	 * System.out.println("added"); return
+	 * Response.status(200).entity(line).build(); } else {
+	 * System.out.println("not added"); return
+	 * Response.status(500).entity("Greska pri dodavanju linije.").build(); } Line
+	 * l=gson.fromJson(line.toString(),Line.class);
+	 * System.out.println(l.toString()); return
+	 * Response.status(200).entity(l).build(); }
+	 */
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response add(Line line/*,@PathParam("sign") String sign*/) {
-		/*if(redis.addLineInDatabase(line)) {
-			System.out.println("added");
-			return Response.status(200).entity(line).build();
-		}
-		else {
-			System.out.println("not added");
-			return Response.status(500).entity("Greska pri dodavanju linije.").build();
-		}*/
-		Line l=gson.fromJson(line.toString(),Line.class);
-		System.out.println(l.toString());
-		return Response.status(200).entity(l).build();
-	}
-	
-	@PUT
-	@Path("/{id}")
-	
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response edit(Line line, @PathParam("id") String id) {
-		if (redis.update(line, id)) {
+	public Response edit(Line line) {
+		if (redis.update(line.getSign(), line)) {
 			return Response.status(200).entity(line).build();
 		}
 		return Response.status(404).build();
 	}
+
 	@DELETE
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{id}")
-    public Response deleteLine(@PathParam("id") String id){
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/{id}")
+	public Response deleteLine(@PathParam("id") String id) {
 		if (redis.deleteLine(id)) {
 			return Response.noContent().build();
 		}
-		return Response.status(404).build();     
-    }
+		return Response.status(404).build();
+	}
 }

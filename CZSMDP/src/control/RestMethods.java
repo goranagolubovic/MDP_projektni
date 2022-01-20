@@ -4,10 +4,21 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status.Family;
+
+import org.glassfish.jersey.client.ClientConfig;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
@@ -151,5 +162,12 @@ public class RestMethods {
 			e.printStackTrace();
 		}	
 		return false;
+	}
+
+	public static boolean createSchedule(String nameOfMethod, Line line) {
+		WebTarget webTarget = ClientBuilder.newClient().target("http://localhost:8080/CZSMDP/api/line");
+		Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
+		Response response = invocationBuilder.post(Entity.json(line));
+		return response.getStatus()==200;
 	}
 }
