@@ -1,16 +1,20 @@
 package controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.MulticastSocket;
 import java.net.URL;
+import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import control.XMLSerializer;
@@ -210,56 +214,91 @@ public class CZSMDPController implements Initializable{
 				socket = new MulticastSocket(NOTIFICATION_PORT);
 				InetAddress address = InetAddress.getByName(NOTIFICATION_HOST);
 				socket.joinGroup(address);
+				DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 				while (true) {
-					DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 					if(packet.getLength()!=0) {
-						/*(isNotificationArrived=true;
+						isNotificationArrived=true;
 						while(isNotificationArrived) {
-							String currentWorkingDir = System.getProperty("user.dir");
-					        System.out.println(currentWorkingDir);
-							Image image=new Image("file:\\images\\left-bell.png");
-							viewNotificationsImageView.setImage(new Image("file:\\images\\left-bell.png"));
-							Thread.sleep(500);
-							viewNotificationsImageView.setImage(new Image("file:\\images\\bell.png"));
-							Thread.sleep(500);
-							viewNotificationsImageView.setImage(new Image("file:\\images\\right-bell.png"));
-							Thread.sleep(500);
-							viewNotificationsImageView.setImage(new Image("file:\\images\\bell.png"));
-							Thread.sleep(500);
+							viewNotificationsImageView.setImage(new Image(new FileInputStream("images\\left-bell.png")));
+							Thread.sleep(200);
+							viewNotificationsImageView.setImage(new Image(new FileInputStream("images\\bell.png")));
+							Thread.sleep(200);
+							viewNotificationsImageView.setImage(new Image(new FileInputStream("images\\right-bell.png")));
+							Thread.sleep(200);
+							viewNotificationsImageView.setImage(new Image(new FileInputStream("images\\bell.png")));
+							Thread.sleep(200);
 							
-						}*/
+						}
 					socket.receive(packet);
 					String received = new String(packet.getData(), 0, packet.getLength());
 					notificationContent += received.split(":")[1] + "\n";
 					}
 				}
-			} catch (IOException ioe) {
+			} catch (IOException | InterruptedException ioe) {
 				System.out.println(ioe);
 			}
 		}).start();
 	}
 	@FXML
 	private void downloadReport(MouseEvent e) {
+		Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/downloadReport.fxml"));
+		Parent root = null;
 		String PATH = "resources";
+			System.setProperty("java.security.policy", PATH + File.separator + "client_policyfile.txt");
+			if (System.getSecurityManager() == null) {
+				System.setSecurityManager(new SecurityManager());
+			}
+			AZSMDPInterface azsmdpServer;
+			try {
+				azsmdpServer = (AZSMDPInterface) Naming.lookup("rmi://127.0.0.1:1099/AZSMDPServer");
+				List<String> fileNames = azsmdpServer.getReportNames();	
+				DownloadReportController downloadReportController = new DownloadReportController(addUserImageView.getScene(),stage.getTitle(),fileNames);
+				loader.setController(downloadReportController);
+				try {
+					root = loader.load();
+
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					// Logger.getLogger(FXMain.class.getName()).addHandler(MainPageController.handler);
+					// Logger.getLogger(FXMain.class.getName()).log(Level.WARNING,
+					// e.fillInStackTrace().toString());
+				}
+				Scene scene = new Scene(root);
+				stage.setScene(scene);
+				stage.setTitle("Download report");
+				stage.show();
+			} catch (MalformedURLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			} catch (RemoteException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			} catch (NotBoundException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+		
+		/*String PATH = "resources";
 		String DOWNLOAD_PATH="downlaoding";
 			System.setProperty("java.security.policy", PATH + File.separator + "client_policyfile.txt");
 			if (System.getSecurityManager() == null) {
 				System.setSecurityManager(new SecurityManager());
 			}
-
-				String name = "AZSMDP Server";
-				Registry registry;
-				try {
-					registry = LocateRegistry.getRegistry(1099);
-					AZSMDPInterface azsmdpServer=(AZSMDPInterface) registry.lookup(name);
-					azsmdpServer.downloadReport(DOWNLOAD_PATH);
-					UnicastRemoteObject.unexportObject(registry, true);
-
-				} catch (RemoteException | NotBoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				//AZSMDPInterface onlineShop = (AZSMDPInterface)
+			AZSMDPInterface azsmdpServer;
+			try {
+				azsmdpServer = (AZSMDPInterface) Naming.lookup("rmi://127.0.0.1:1099/AZSMDPServer");
+				azsmdpServer.downloadReport(DOWNLOAD_PATH);	
+			} catch (MalformedURLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			} catch (RemoteException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			} catch (NotBoundException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}*/
 				
 	}
 }

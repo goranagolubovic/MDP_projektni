@@ -63,7 +63,8 @@ public class AZSMDPServer implements AZSMDPInterface {
 			return null;
 		}
 		byte[] fileContent = Files.readAllBytes(file.toPath());
-		File jsonFile = new File(pathOfFile.replace(".pdf", ".json"));
+		File jsonFile = new File(file.toPath().toString().replace(".pdf", ".json"));
+		System.out.println(jsonFile.getAbsolutePath());
 		JsonObject content = gson.fromJson(Files.readString(jsonFile.toPath()), JsonObject.class);
 		return new Report(pathOfFile, fileContent, content.get("userName").getAsString(),
 				content.get("time").getAsString(), content.get("fileSize").getAsLong());
@@ -73,6 +74,7 @@ public class AZSMDPServer implements AZSMDPInterface {
 	public List<String> getReportNames() throws RemoteException {
 		try {
 			return Files.list(Paths.get(UPLOAD_PATH)).map(Path::getFileName).map(Object::toString)
+					.filter(name->name.endsWith(".pdf"))
 					.collect(Collectors.toList());
 		} catch (IOException e) {
 			e.printStackTrace();

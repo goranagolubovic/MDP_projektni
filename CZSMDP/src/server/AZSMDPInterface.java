@@ -1,12 +1,14 @@
 package server;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 public interface AZSMDPInterface extends Remote {
 
-	boolean uploadReport(String pathOfFile) throws RemoteException;
-//arhiviraj izvjestaj
-	void downloadReport(String pathOfFile) throws RemoteException;
+	boolean uploadReport(Report report) throws RemoteException;
+	Report downloadReport(String pathOfFile) throws RemoteException, IOException;
+	List<String> getReportNames() throws RemoteException;
 }
