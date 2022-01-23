@@ -250,7 +250,7 @@ public class ZSMDPController implements Initializable {
 					socket.receive(packet);
 					String received = new String(packet.getData(), 0, packet.getLength());
 					if (!received.startsWith(username)) {
-						notificationContent += received.split(":")[1] + "\n";
+						notificationContent += received + "\n";
 						Text text = new Text();
 						text.setText(notificationContent);
 
@@ -296,9 +296,10 @@ public class ZSMDPController implements Initializable {
 			while (true) {
 				try {
 					String msg = in.readLine();
-						if (msg != null && !msg.startsWith("ALL")) {
+						if (msg != null && !msg.equals("")) {
 							if (msg.startsWith("ONLINE USERS")) {
 								String users = msg.split(":")[1];
+								String usersGroup[]=users.split(";");
 								// List<String> onlineUsers=Arrays.asList(users.split("*"));
 								// List<String> olineUsersForSelectedStation=onlineUsers.stream()
 								// .filter(u->u.startsWith(locationComboBox.getValue()))
@@ -306,7 +307,7 @@ public class ZSMDPController implements Initializable {
 								// Platform.runLater(()->{
 								if(!"empty".equals(users)) {
 								//userComboBox.setItems(users);
-								userComboBox.getItems().addAll(users);
+								userComboBox.getItems().addAll(usersGroup);
 								}
 								// });
 							}
@@ -319,16 +320,16 @@ public class ZSMDPController implements Initializable {
 
 							}
 							else {
-							String senderInfo = msg.split(":")[1];
-							String senderId = senderInfo.split("#")[0];
-							String senderUsername = senderInfo.split("#")[1];
-
-							String receiverInfo = msg.split(":")[2];
-							String receiverId = receiverInfo.split("#")[0];
-							String receiverUsername = receiverInfo.split("#")[1];
-
 							// potvrdjivanje komunikacije sa korisnikom
 							if (msg.startsWith("CHAT")) {
+								String senderInfo = msg.split(":")[1];
+								String senderId = senderInfo.split("#")[0];
+								String senderUsername = senderInfo.split("#")[1];
+
+								String receiverInfo = msg.split(":")[2];
+								String receiverId = receiverInfo.split("#")[0];
+								String receiverUsername = receiverInfo.split("#")[1];
+
 								isChatRequestProcedeed=true;
 								Platform.runLater(() -> {
 									Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -355,6 +356,13 @@ public class ZSMDPController implements Initializable {
 								});
 
 							} else if (msg.startsWith("VALID CONNECTION")) {
+								String senderInfo = msg.split(":")[1];
+								String senderId = senderInfo.split("#")[0];
+								String senderUsername = senderInfo.split("#")[1];
+
+								String receiverInfo = msg.split(":")[2];
+								String receiverId = receiverInfo.split("#")[0];
+								String receiverUsername = receiverInfo.split("#")[1];
 								if (!userMessagesMap.containsKey(senderInfo)) {
 									userMessagesMap.put(senderInfo, "");
 									/*Platform.runLater(() -> {
@@ -365,6 +373,13 @@ public class ZSMDPController implements Initializable {
 								readyMap.put(senderUsername, true);
 							}
 							else if (msg.startsWith("MESSAGE")) {
+								String senderInfo = msg.split(":")[1];
+								String senderId = senderInfo.split("#")[0];
+								String senderUsername = senderInfo.split("#")[1];
+
+								String receiverInfo = msg.split(":")[2];
+								String receiverId = receiverInfo.split("#")[0];
+								String receiverUsername = receiverInfo.split("#")[1];
 								String newMessage = senderUsername + ": " + msg.split(":")[3] + "\n";
 								final String messages = userMessagesMap.get(senderInfo) + newMessage;
 								userMessagesMap.replace(senderInfo, messages);
@@ -372,6 +387,13 @@ public class ZSMDPController implements Initializable {
 									messageTextArea.setText(userMessagesMap.get(senderInfo));
 								});
 							} else if (msg.startsWith("FILE")) {
+								String senderInfo = msg.split(":")[1];
+								String senderId = senderInfo.split("#")[0];
+								String senderUsername = senderInfo.split("#")[1];
+
+								String receiverInfo = msg.split(":")[2];
+								String receiverId = receiverInfo.split("#")[0];
+								String receiverUsername = receiverInfo.split("#")[1];
 								Wrapper wrapper = new Wrapper();
 								String fileName = msg.split(":")[3];
 								String fileContent = msg.split(":")[4];

@@ -8,6 +8,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+
+
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
@@ -55,7 +57,7 @@ public class RestMethods {
 	public static void methodPut(String nameOfMethod,String id,Line line) {
 		URL url;
 		try {
-			url = new URL("http://localhost:8080/CZSMDP/api/line/"+id);
+			url = new URL("http://localhost:8080/CZSMDP/api/line/");
 			HttpURLConnection conn;
 			try {
 				conn = (HttpURLConnection) url.openConnection();
@@ -83,7 +85,7 @@ public class RestMethods {
 			e.printStackTrace();
 		}
 		
-		
+	
 	}
 
 }

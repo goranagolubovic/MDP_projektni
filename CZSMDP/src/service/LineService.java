@@ -74,7 +74,15 @@ public class LineService {
 		}
 		return Response.status(404).build();
 	}
-
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response editLine(Line line) {
+		if (redis.update(line.getSign(), line)) {
+			return Response.status(200).entity(line).build();
+		}
+		return Response.status(404).build();
+	}
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}")

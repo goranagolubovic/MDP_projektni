@@ -217,7 +217,10 @@ public class CZSMDPController implements Initializable{
 				DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 				while (true) {
 					socket.receive(packet);
-					if(packet.getData().length!=0) {
+					System.out.println(packet.getLength());
+					String received = new String(packet.getData(), 0, packet.getLength());
+					notificationContent += received + "\n";
+					if(packet.getLength()!=0) {
 						isNotificationArrived=true;
 						while(isNotificationArrived) {
 							viewNotificationsImageView.setImage(new Image(new FileInputStream("images\\left-bell.png")));
@@ -230,9 +233,6 @@ public class CZSMDPController implements Initializable{
 							Thread.sleep(200);
 							
 						}
-					socket.receive(packet);
-					String received = new String(packet.getData(), 0, packet.getLength());
-					notificationContent += received.split(":")[1] + "\n";
 					}
 				}
 			} catch (IOException | InterruptedException ioe) {

@@ -74,8 +74,9 @@ public class ChatSocketServerThread extends Thread {
 					PrintWriter pw = new PrintWriter(userSocket.getOutputStream(), true);
 					String usersOnline="";
 					for(String u:onlineUsersInStation) {
-						usersOnline+=u+"\n";
+						usersOnline+=u+";";
 					}
+					System.out.println(usersOnline);
 					if(usersOnline.length()!=0) {
 					pw.println("ONLINE USERS:"+usersOnline.substring(0,usersOnline.length()-1)+":"+clientsInfo.size());
 					}
