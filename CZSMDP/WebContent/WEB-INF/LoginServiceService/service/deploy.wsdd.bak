@@ -20,16 +20,18 @@
       <parameter name="className" value="service.LoginServiceSoapBindingImpl"/>
       <parameter name="wsdlPortType" value="LoginService"/>
       <parameter name="typeMappingVersion" value="1.2"/>
+      <operation name="getStations" qname="operNS:getStations" xmlns:operNS="http://service" returnQName="retNS:getStationsReturn" xmlns:retNS="http://service" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+      </operation>
       <operation name="login" qname="operNS:login" xmlns:operNS="http://service" returnQName="retNS:loginReturn" xmlns:retNS="http://service" returnType="rtns:User" xmlns:rtns="http://model" soapAction="" >
         <parameter qname="pns:user" xmlns:pns="http://service" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
         <parameter qname="pns:password" xmlns:pns="http://service" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
       </operation>
+      <operation name="users" qname="operNS:users" xmlns:operNS="http://service" returnQName="retNS:usersReturn" xmlns:retNS="http://service" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+      </operation>
       <operation name="getUsersForSelectedStation" qname="operNS:getUsersForSelectedStation" xmlns:operNS="http://service" returnQName="retNS:getUsersForSelectedStationReturn" xmlns:retNS="http://service" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
         <parameter qname="pns:station" xmlns:pns="http://service" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
       </operation>
-      <operation name="getStations" qname="operNS:getStations" xmlns:operNS="http://service" returnQName="retNS:getStationsReturn" xmlns:retNS="http://service" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
-      </operation>
-      <parameter name="allowedMethods" value="getUsersForSelectedStation getStations login"/>
+      <parameter name="allowedMethods" value="getUsersForSelectedStation getStations login users"/>
 
       <typeMapping
         xmlns:ns="http://model"

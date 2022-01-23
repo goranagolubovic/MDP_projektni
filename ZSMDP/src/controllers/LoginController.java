@@ -19,6 +19,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -71,7 +72,11 @@ public class LoginController implements Initializable{
 				}
 				}
 				else {
-					System.out.println("Neuspjesno prijavljen!");
+					Platform.runLater(()->{
+						Alert alert=new Alert(AlertType.ERROR);
+						alert.setContentText("Netačno korisničko ime ili lozinka.Pokušajte ponovo.");
+						alert.showAndWait();
+					});
 				}
 	}
 	@Override

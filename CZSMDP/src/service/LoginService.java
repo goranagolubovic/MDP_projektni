@@ -60,4 +60,12 @@ public class LoginService {
 			}
 		return usersName.toArray(new String[usersName.size()]);
 	}
+	public String[] users() {
+		User[] users=XMLSerializer.deserializeWithXML();
+		List<String>usernames=new ArrayList<>();
+		for(int i=0;i<users.length;i++) {
+			usernames.add(users[i].getUsername());
+		}
+		return usernames.toArray(new String[usernames.size()]);
+	}
 }

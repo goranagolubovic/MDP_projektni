@@ -5,6 +5,16 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
  <wsdl:types>
   <schema elementFormDefault="qualified" targetNamespace="http://service" xmlns="http://www.w3.org/2001/XMLSchema">
    <import namespace="http://model"/>
+   <element name="getStations">
+    <complexType/>
+   </element>
+   <element name="getStationsResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="getStationsReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
    <element name="login">
     <complexType>
      <sequence>
@@ -20,6 +30,16 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      </sequence>
     </complexType>
    </element>
+   <element name="users">
+    <complexType/>
+   </element>
+   <element name="usersResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="usersReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
    <element name="getUsersForSelectedStation">
     <complexType>
      <sequence>
@@ -31,16 +51,6 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
     <complexType>
      <sequence>
       <element maxOccurs="unbounded" name="getUsersForSelectedStationReturn" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="getStations">
-    <complexType/>
-   </element>
-   <element name="getStationsResponse">
-    <complexType>
-     <sequence>
-      <element maxOccurs="unbounded" name="getStationsReturn" type="xsd:string"/>
      </sequence>
     </complexType>
    </element>
@@ -59,6 +69,14 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
    <wsdl:message name="loginRequest">
 
       <wsdl:part element="impl:login" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="usersResponse">
+
+      <wsdl:part element="impl:usersResponse" name="parameters">
 
       </wsdl:part>
 
@@ -104,7 +122,27 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
    </wsdl:message>
 
+   <wsdl:message name="usersRequest">
+
+      <wsdl:part element="impl:users" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
    <wsdl:portType name="LoginService">
+
+      <wsdl:operation name="getStations">
+
+         <wsdl:input message="impl:getStationsRequest" name="getStationsRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getStationsResponse" name="getStationsResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
 
       <wsdl:operation name="login">
 
@@ -113,6 +151,18 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
        </wsdl:input>
 
          <wsdl:output message="impl:loginResponse" name="loginResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="users">
+
+         <wsdl:input message="impl:usersRequest" name="usersRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:usersResponse" name="usersResponse">
 
        </wsdl:output>
 
@@ -130,23 +180,29 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
       </wsdl:operation>
 
-      <wsdl:operation name="getStations">
-
-         <wsdl:input message="impl:getStationsRequest" name="getStationsRequest">
-
-       </wsdl:input>
-
-         <wsdl:output message="impl:getStationsResponse" name="getStationsResponse">
-
-       </wsdl:output>
-
-      </wsdl:operation>
-
    </wsdl:portType>
 
    <wsdl:binding name="LoginServiceSoapBinding" type="impl:LoginService">
 
       <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="getStations">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getStationsRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getStationsResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
 
       <wsdl:operation name="login">
 
@@ -166,6 +222,24 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
       </wsdl:operation>
 
+      <wsdl:operation name="users">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="usersRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="usersResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
       <wsdl:operation name="getUsersForSelectedStation">
 
          <wsdlsoap:operation soapAction=""/>
@@ -177,24 +251,6 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
          </wsdl:input>
 
          <wsdl:output name="getUsersForSelectedStationResponse">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:output>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="getStations">
-
-         <wsdlsoap:operation soapAction=""/>
-
-         <wsdl:input name="getStationsRequest">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:input>
-
-         <wsdl:output name="getStationsResponse">
 
             <wsdlsoap:body use="literal"/>
 

@@ -53,16 +53,8 @@ public class LoginController implements Initializable{
 				Platform.runLater(new Runnable() {
 				      public void run() {
 				          Alert alert = new Alert(Alert.AlertType.ERROR);
-				          alert.setTitle("");
-				          VBox a = new VBox();
-				          	a.setStyle("-fx-background-color:  #cdaf3f");
-				            a.setPrefHeight(100);
-				            a.setPrefWidth(100);
-				             Label label = new Label("Netačno korisničko ime ili lozinka!");
-				             label.setStyle("-fx-text-fill:  #ffffff");
-				             a.getChildren().add(label);
-				             alert.getDialogPane().setContent(a);
-					         alert.showAndWait();
+				          alert.setContentText("Netačno korisničko ime ili lozinka.Pokušajte ponovo.");
+					      alert.showAndWait();
 				      }
 				    });
 			}

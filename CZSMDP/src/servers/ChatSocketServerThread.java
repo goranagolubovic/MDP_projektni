@@ -77,7 +77,7 @@ public class ChatSocketServerThread extends Thread {
 						usersOnline+=u+"\n";
 					}
 					if(usersOnline.length()!=0) {
-					pw.println("ONLINE USERS:"+usersOnline.substring(0,usersOnline.length()-1));
+					pw.println("ONLINE USERS:"+usersOnline.substring(0,usersOnline.length()-1)+":"+clientsInfo.size());
 					}
 					else {
 						pw.println("ONLINE USERS:"+"empty");

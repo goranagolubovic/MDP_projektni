@@ -216,7 +216,8 @@ public class CZSMDPController implements Initializable{
 				socket.joinGroup(address);
 				DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 				while (true) {
-					if(packet.getLength()!=0) {
+					socket.receive(packet);
+					if(packet.getData().length!=0) {
 						isNotificationArrived=true;
 						while(isNotificationArrived) {
 							viewNotificationsImageView.setImage(new Image(new FileInputStream("images\\left-bell.png")));

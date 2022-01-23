@@ -1,5 +1,6 @@
 package controllers;
 
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
@@ -43,6 +45,8 @@ import com.rabbitmq.client.impl.Environment;
 
 import control.LogginSingleton;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -103,11 +107,15 @@ public class ZSMDPController implements Initializable {
 
 	private String downloadFolder = "files";
 
-	boolean ready;
-	Map<String, String> userMessagesMap = new HashMap<>();
+	ConcurrentHashMap<String,Boolean> readyMap = new ConcurrentHashMap<>();
+	ConcurrentHashMap<String, String> userMessagesMap = new ConcurrentHashMap<>();
 	List<String> onlineUsers = new ArrayList<>();
 
 	private String notificationContent = "";
+	private Object userComboBoxLocker = new Object();
+	private String previousUserComboBoxValue="";
+	private boolean isNewConnectionInitiated=true;
+	private volatile boolean isChatRequestProcedeed;
 
 	private static final int NOTIFICATION_PORT = 20000;
 	private static final String NOTIFICATION_HOST = "224.0.0.11";
@@ -186,16 +194,47 @@ public class ZSMDPController implements Initializable {
 			locationComboBox.getItems().addAll(stations);
 			locationComboBox.getSelectionModel().select(getIndexOfCurrentStation(stations));
 			chatClientSocket.addSocketInMap(id);
+			
+			String[] usernames=log.users();
+			for(int i=0;i<usernames.length;i++) {
+				readyMap.put(usernames[i],false);
+			}
 			initializeUserComboBox(null);
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			// userComboBox.getItems().addListener(log.getUsersForSelectedStation(locationComboBox.getValue()),userComboBox.getItems(),log.getUsersForSelectedStation(locationComboBox.getValue()));
 		} catch (ServiceException e1) {
 			e1.printStackTrace();
 		} catch (RemoteException e2) {
 			e2.printStackTrace();
 		}
-
 		listenForMessages();
 		listenForNotifications();
+		userComboBox.valueProperty().addListener((ov,previous,current)->{
+				//Platform.runLater(()->{
+					if(!"".equals(current) && current!=null) {
+						System.out.println(current);
+							boolean ready=readyMap.get(userComboBox.getValue());
+							if (ready) {
+								Platform.runLater(() -> {
+									messageTextArea.setText(userMessagesMap.get(userComboBox.getValue()));
+								});
+							}
+							else {
+								Platform.runLater(() -> {
+									messageTextArea.setText("");
+								});
+								new Thread(() -> ChatClientSocket.connect(id, username, locationComboBox.getValue(), userComboBox.getValue()))
+									.start();
+							}
+						}
+		});
+		//checkIfUserComboBoxIsNotEmpty();
+		//actionUserComboBoxListener();
 	}
 
 	private void listenForNotifications() {
@@ -232,7 +271,7 @@ public class ZSMDPController implements Initializable {
 
 	@FXML
 	public void initializeUserComboBox(ActionEvent e) {
-		new Thread(() -> {
+			isChatRequestProcedeed=false;
 			LoginServiceServiceLocator locator = new LoginServiceServiceLocator();
 			LoginService log;
 			PrintWriter out = chatClientSocket.out;
@@ -240,14 +279,14 @@ public class ZSMDPController implements Initializable {
 				log = locator.getLoginService();
 				userComboBox.getItems().clear();
 				userComboBox.setValue("");
+				synchronized(userComboBoxLocker) {
+					userComboBoxLocker.notify();
+				}
 				out.println("SEND ONLINE USERS:" + id + "#" + username + ":" + locationComboBox.getValue());
 			} catch (ServiceException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-
-		}).start();
-
 	}
 
 	public void listenForMessages() {
@@ -257,7 +296,7 @@ public class ZSMDPController implements Initializable {
 			while (true) {
 				try {
 					String msg = in.readLine();
-						if (msg != null) {
+						if (msg != null && !msg.startsWith("ALL")) {
 							if (msg.startsWith("ONLINE USERS")) {
 								String users = msg.split(":")[1];
 								// List<String> onlineUsers=Arrays.asList(users.split("*"));
@@ -266,6 +305,7 @@ public class ZSMDPController implements Initializable {
 								// .collect(Collectors.toList());
 								// Platform.runLater(()->{
 								if(!"empty".equals(users)) {
+								//userComboBox.setItems(users);
 								userComboBox.getItems().addAll(users);
 								}
 								// });
@@ -289,21 +329,28 @@ public class ZSMDPController implements Initializable {
 
 							// potvrdjivanje komunikacije sa korisnikom
 							if (msg.startsWith("CHAT")) {
+								isChatRequestProcedeed=true;
 								Platform.runLater(() -> {
 									Alert alert = new Alert(AlertType.CONFIRMATION);
 									alert.setContentText("Da li želite da uspostavite komunikaciju sa korisnikom "
 											+ senderUsername + "?");
 									final Optional<ButtonType> result = alert.showAndWait();
-
 									if (result.get() == ButtonType.OK) {
+										userComboBox.setValue("");
 										new Thread(() -> {
 											System.out.println("Non-UI thread");
 											out.println("VALID CONNECTION:" + receiverInfo + ":" + senderInfo);
 											userMessagesMap.put(senderInfo, "");
-											ready = true;
+											readyMap.put(senderUsername, true);
 										}).start();
 										locationComboBox.setValue(senderId);
 										userComboBox.setValue(senderUsername);
+										/*userComboBox.setOnInputMethodTextChanged(e->{
+											messageTextArea.setText("");
+											return;
+										}
+										);*/
+										
 									}
 								});
 
@@ -315,7 +362,7 @@ public class ZSMDPController implements Initializable {
 										userComboBox.setValue(senderUsername);
 									});*/
 								}
-								ready = true;
+								readyMap.put(senderUsername, true);
 							}
 							else if (msg.startsWith("MESSAGE")) {
 								String newMessage = senderUsername + ": " + msg.split(":")[3] + "\n";
@@ -375,17 +422,126 @@ public class ZSMDPController implements Initializable {
 			}
 		}).start();
 	}
-
-	@FXML
-	public void selectUser(ActionEvent e) {
-		if (ready)
-			return;
-		new Thread(() -> ChatClientSocket.connect(id, username, locationComboBox.getValue(), userComboBox.getValue()))
-				.start();
+	/*@FXML
+	private void checkIfUserComboBoxIsNotEmpty() {
+		new Thread(()->{
+			while(true) {
+			if(userComboBox.getValue()!="") {
+				synchronized (userComboBoxLocker) {
+					userComboBoxLocker.notifyAll();
+				}
+			}
+			}
+		}).start();
 	}
 
 	@FXML
+	public void selectUser(ActionEvent e) {
+		if(e==null) {
+			messageTextArea.setText("");
+			//});
+			return;
+		}
+	new Thread(()->{
+		//Platform.runLater(()->{
+			if("".equals(userComboBox.getValue())) {
+				synchronized(userComboBoxLocker) {
+					try {
+						userComboBoxLocker.wait();
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					boolean ready=readyMap.get(userComboBox.getValue());
+					if (ready) {
+						//Platform.runLater(() -> {
+							messageTextArea.setText(userMessagesMap.get(userComboBox.getValue()));
+						//});
+						return;
+					}
+					else {
+						//Platform.runLater(() -> {
+							messageTextArea.setText("");
+						//});
+						new Thread(() -> ChatClientSocket.connect(id, username, locationComboBox.getValue(), userComboBox.getValue()))
+							.start();
+						return;
+					}
+				}
+			}
+			/*if("".equals(userComboBox.getValue())) {
+				return;
+			}
+			
+			else {
+				System.out.println(userComboBox.getValue());
+			boolean ready=readyMap.get(userComboBox.getValue());
+			if (ready) {
+				//Platform.runLater(() -> {
+				messageTextArea.setText(userMessagesMap.get(userComboBox.getValue()));
+			//});
+				return;
+			}
+			else {
+				//Platform.runLater(() -> {
+					messageTextArea.setText("");
+				//});
+				//new Thread(() ->
+				ChatClientSocket.connect(id, username, locationComboBox.getValue(), userComboBox.getValue());
+					//.start();
+				return;
+			}
+			}*/
+		//});
+		//}).start();
+//}
+	/*private void actionUserComboBoxListener() {
+		new Thread(()->{
+			while(true) {
+				if(isChatRequestProcedeed) {
+					synchronized(userComboBoxLocker) {
+						try {
+							userComboBoxLocker.wait();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						}
+				}
+			if(!previousUserComboBoxValue.equals(userComboBox.getValue()))
+				isNewConnectionInitiated=true;
+			while(isNewConnectionInitiated) {
+			if(!"".equals(userComboBox.getValue())) {
+				previousUserComboBoxValue=userComboBox.getValue();
+					boolean ready=readyMap.get(userComboBox.getValue());
+					if (ready) {
+						//Platform.runLater(() -> {
+						messageTextArea.setText(userMessagesMap.get(userComboBox.getValue()));
+					//});
+					}
+					else {
+						//Platform.runLater(() -> {
+							messageTextArea.setText("");
+						//});
+						//new Thread(() ->
+						ChatClientSocket.connect(id, username, locationComboBox.getValue(), userComboBox.getValue());
+							isNewConnectionInitiated=false;
+				}
+				
+			}
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			}
+			}
+		}).start();
+	}*/
+	@FXML
 	private void sendMessage(MouseEvent e) {
+		boolean ready=readyMap.get(userComboBox.getValue());
 		if (!ready) {
 			Platform.runLater(() -> {
 				Alert alert = new Alert(AlertType.INFORMATION);

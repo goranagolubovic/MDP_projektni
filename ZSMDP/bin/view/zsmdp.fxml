@@ -111,7 +111,7 @@
             </ImageView>
             <Label fx:id="userLabel" layoutX="158.0" layoutY="46.0" prefHeight="26.0" prefWidth="82.0" text="label" />
             <ComboBox fx:id="locationComboBox" editable="true" layoutX="498.0" layoutY="106.0" onAction="#initializeUserComboBox" prefWidth="150.0" promptText="Izaberi lokaciju" style="-fx-background-color: #cd853f;" />
-            <ComboBox fx:id="userComboBox" editable="true" layoutX="663.0" layoutY="106.0" onAction="#selectUser" prefWidth="150.0" promptText="Izaberi korisnika" />
+            <ComboBox fx:id="userComboBox" editable="true" layoutX="663.0" layoutY="106.0" prefWidth="150.0" promptText="Izaberi korisnika" />
             <ImageView fitHeight="395.0" fitWidth="402.0" layoutX="458.0" layoutY="155.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../images/template4.png" />

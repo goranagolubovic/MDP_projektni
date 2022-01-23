@@ -2,6 +2,7 @@ package main;
 
 import java.io.IOException;
 
+import controllers.LoginController;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +22,8 @@ public class FXMain extends Application {
     public void start(Stage primaryStage) throws IOException {
         Parent root = null;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/login.fxml"));
+        LoginController loginController=new LoginController();
+        loader.setController(loginController);
         try {
             root = loader.load();
             
