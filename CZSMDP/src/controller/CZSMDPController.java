@@ -11,30 +11,24 @@ import java.net.URL;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import control.XMLSerializer;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import model.User;
+import main.FXMain;
+import properties.ConfigProperties;
 import server.AZSMDPInterface;
 
 public class CZSMDPController implements Initializable{
@@ -42,20 +36,21 @@ public class CZSMDPController implements Initializable{
 	ImageView addUserImageView;
 	@FXML
 	ImageView viewNotificationsImageView;
-	private static final int NOTIFICATION_PORT = 20000;
-	private static final String NOTIFICATION_HOST = "224.0.0.11";
-	
+	private static int NOTIFICATION_PORT;
+	private static String NOTIFICATION_HOST ;
+	private static ConfigProperties configProperties=new ConfigProperties();
 	private String notificationContent="";
 
 	private boolean isNotificationArrived=false;
 	
 	public CZSMDPController() {
-		
+		NOTIFICATION_HOST=configProperties.getProperties().getProperty("NOTIFICATION_HOST");
+		NOTIFICATION_PORT=Integer.valueOf(configProperties.getProperties().getProperty("NOTIFICATION_PORT"));
 	}
 	@FXML
 	private void addUser(MouseEvent e) {
 		Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/addUser.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(configProperties.getProperties().getProperty("ADD_USER")));
 		Parent root = null;
 		AddUserController addUserController = new AddUserController(addUserImageView.getScene(),stage.getTitle());
 		loader.setController(addUserController);
@@ -63,21 +58,17 @@ public class CZSMDPController implements Initializable{
 			root = loader.load();
 
 		} catch (IOException e1) {
-			e1.printStackTrace();
-			// Logger.getLogger(FXMain.class.getName()).addHandler(MainPageController.handler);
-			// Logger.getLogger(FXMain.class.getName()).log(Level.WARNING,
-			// e.fillInStackTrace().toString());
+			Logger.getLogger(CZSMDPController.class.getName()).log(Level.WARNING, e1.fillInStackTrace().toString());
 		}
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		stage.setTitle("Add user");
 		stage.show();
-		
 	}
 	@FXML
 	private void deleteUser(MouseEvent e) {
 		Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/deleteUser.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(configProperties.getProperties().getProperty("DELETE_USER")));
 		Parent root = null;
 		DeleteUserController deleteUserController = new DeleteUserController(addUserImageView.getScene(),stage.getTitle());
 		loader.setController(deleteUserController);
@@ -85,10 +76,7 @@ public class CZSMDPController implements Initializable{
 			root = loader.load();
 
 		} catch (IOException e1) {
-			e1.printStackTrace();
-			// Logger.getLogger(FXMain.class.getName()).addHandler(MainPageController.handler);
-			// Logger.getLogger(FXMain.class.getName()).log(Level.WARNING,
-			// e.fillInStackTrace().toString());
+			Logger.getLogger(CZSMDPController.class.getName()).log(Level.WARNING, e1.fillInStackTrace().toString());
 		}
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
@@ -98,7 +86,7 @@ public class CZSMDPController implements Initializable{
 	@FXML
 	private void viewUsers(MouseEvent e) {
 		Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/viewUsers.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(configProperties.getProperties().getProperty("VIEW_USERS")));
 		Parent root = null;
 		ViewUsersController viewUsersController = new ViewUsersController(addUserImageView.getScene(),stage.getTitle());
 		loader.setController(viewUsersController);
@@ -106,10 +94,7 @@ public class CZSMDPController implements Initializable{
 			root = loader.load();
 
 		} catch (IOException e1) {
-			e1.printStackTrace();
-			// Logger.getLogger(FXMain.class.getName()).addHandler(MainPageController.handler);
-			// Logger.getLogger(FXMain.class.getName()).log(Level.WARNING,
-			// e.fillInStackTrace().toString());
+			Logger.getLogger(CZSMDPController.class.getName()).log(Level.WARNING, e1.fillInStackTrace().toString());
 		}
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
@@ -119,7 +104,7 @@ public class CZSMDPController implements Initializable{
 	@FXML
 	private void viewTimeSchedule(MouseEvent e) {
 		Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/viewTime.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(configProperties.getProperties().getProperty("VIEW_TIME")));
 		Parent root = null;
 		ViewTimeController viewTimeController = new ViewTimeController(addUserImageView.getScene(),stage.getTitle());
 		loader.setController(viewTimeController);
@@ -127,10 +112,7 @@ public class CZSMDPController implements Initializable{
 			root = loader.load();
 
 		} catch (IOException e1) {
-			e1.printStackTrace();
-			// Logger.getLogger(FXMain.class.getName()).addHandler(MainPageController.handler);
-			// Logger.getLogger(FXMain.class.getName()).log(Level.WARNING,
-			// e.fillInStackTrace().toString());
+			Logger.getLogger(CZSMDPController.class.getName()).log(Level.WARNING, e1.fillInStackTrace().toString());
 		}
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
@@ -140,7 +122,7 @@ public class CZSMDPController implements Initializable{
 	@FXML
 	private void deleteLine(MouseEvent e) {
 		Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/deleteLine.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(configProperties.getProperties().getProperty("DELETE_LINE")));
 		Parent root = null;
 		DeleteLineController deleteLineController = new DeleteLineController(addUserImageView.getScene(),stage.getTitle());
 		loader.setController(deleteLineController);
@@ -148,10 +130,7 @@ public class CZSMDPController implements Initializable{
 			root = loader.load();
 
 		} catch (IOException e1) {
-			e1.printStackTrace();
-			// Logger.getLogger(FXMain.class.getName()).addHandler(MainPageController.handler);
-			// Logger.getLogger(FXMain.class.getName()).log(Level.WARNING,
-			// e.fillInStackTrace().toString());
+			Logger.getLogger(CZSMDPController.class.getName()).log(Level.WARNING, e1.fillInStackTrace().toString());
 		}
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
@@ -161,7 +140,7 @@ public class CZSMDPController implements Initializable{
 	@FXML
 	private void createSchedule(MouseEvent e) {
 		Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/createSchedule.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(configProperties.getProperties().getProperty("CREATE_SCHEDULE")));
 		Parent root = null;
 		CreateScheduleController createScheduleController = new CreateScheduleController(addUserImageView.getScene(),stage.getTitle());
 		loader.setController(createScheduleController);
@@ -169,10 +148,7 @@ public class CZSMDPController implements Initializable{
 			root = loader.load();
 
 		} catch (IOException e1) {
-			e1.printStackTrace();
-			// Logger.getLogger(FXMain.class.getName()).addHandler(MainPageController.handler);
-			// Logger.getLogger(FXMain.class.getName()).log(Level.WARNING,
-			// e.fillInStackTrace().toString());
+			Logger.getLogger(CZSMDPController.class.getName()).log(Level.WARNING, e1.fillInStackTrace().toString());
 		}
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
@@ -182,7 +158,7 @@ public class CZSMDPController implements Initializable{
 	@FXML
 	private void viewNotifications(MouseEvent e) {
 		Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/viewNotifications.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(configProperties.getProperties().getProperty("VIEW_NOTIFICATIONS")));
 		Parent root = null;
 		ViewNotificationsController viewNotificationsController = new ViewNotificationsController(addUserImageView.getScene(),stage.getTitle(),notificationContent);
 		loader.setController(viewNotificationsController);
@@ -190,10 +166,7 @@ public class CZSMDPController implements Initializable{
 			root = loader.load();
 
 		} catch (IOException e1) {
-			e1.printStackTrace();
-			// Logger.getLogger(FXMain.class.getName()).addHandler(MainPageController.handler);
-			// Logger.getLogger(FXMain.class.getName()).log(Level.WARNING,
-			// e.fillInStackTrace().toString());
+			Logger.getLogger(CZSMDPController.class.getName()).log(Level.WARNING, e1.fillInStackTrace().toString());
 		}
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
@@ -207,7 +180,6 @@ public class CZSMDPController implements Initializable{
 	}
 	private void listenForNotificatons() {
 		new Thread(()->{
-			//String notificationContent="";
 			MulticastSocket socket = null;
 			byte[] buffer = new byte[256];
 			try {
@@ -217,26 +189,25 @@ public class CZSMDPController implements Initializable{
 				DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 				while (true) {
 					socket.receive(packet);
-					System.out.println(packet.getLength());
 					String received = new String(packet.getData(), 0, packet.getLength());
 					notificationContent += received + "\n";
 					if(packet.getLength()!=0) {
 						isNotificationArrived=true;
 						while(isNotificationArrived) {
-							viewNotificationsImageView.setImage(new Image(new FileInputStream("images\\left-bell.png")));
+							viewNotificationsImageView.setImage(new Image(new FileInputStream(configProperties.getProperties().getProperty("LEFT_BELL"))));
 							Thread.sleep(200);
-							viewNotificationsImageView.setImage(new Image(new FileInputStream("images\\bell.png")));
+							viewNotificationsImageView.setImage(new Image(new FileInputStream(configProperties.getProperties().getProperty("BELL"))));
 							Thread.sleep(200);
-							viewNotificationsImageView.setImage(new Image(new FileInputStream("images\\right-bell.png")));
+							viewNotificationsImageView.setImage(new Image(new FileInputStream(configProperties.getProperties().getProperty("RIGHT_BELL"))));
 							Thread.sleep(200);
-							viewNotificationsImageView.setImage(new Image(new FileInputStream("images\\bell.png")));
+							viewNotificationsImageView.setImage(new Image(new FileInputStream(configProperties.getProperties().getProperty("BELL"))));
 							Thread.sleep(200);
 							
 						}
 					}
 				}
 			} catch (IOException | InterruptedException ioe) {
-				System.out.println(ioe);
+				Logger.getLogger(CZSMDPController.class.getName()).log(Level.WARNING, ioe.fillInStackTrace().toString());
 			}
 		}).start();
 	}
@@ -245,14 +216,13 @@ public class CZSMDPController implements Initializable{
 		Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/downloadReport.fxml"));
 		Parent root = null;
-		String PATH = "resources";
-			System.setProperty("java.security.policy", PATH + File.separator + "client_policyfile.txt");
+			System.setProperty("java.security.policy", configProperties.getProperties().getProperty("CLIENT_POLICYFILE"));
 			if (System.getSecurityManager() == null) {
 				System.setSecurityManager(new SecurityManager());
 			}
 			AZSMDPInterface azsmdpServer;
 			try {
-				azsmdpServer = (AZSMDPInterface) Naming.lookup("rmi://127.0.0.1:1099/AZSMDPServer");
+				azsmdpServer = (AZSMDPInterface) Naming.lookup(configProperties.getProperties().getProperty("NAMING_PATH"));
 				List<String> fileNames = azsmdpServer.getReportNames();	
 				DownloadReportController downloadReportController = new DownloadReportController(addUserImageView.getScene(),stage.getTitle(),fileNames);
 				loader.setController(downloadReportController);
@@ -260,46 +230,18 @@ public class CZSMDPController implements Initializable{
 					root = loader.load();
 
 				} catch (IOException e1) {
-					e1.printStackTrace();
-					// Logger.getLogger(FXMain.class.getName()).addHandler(MainPageController.handler);
-					// Logger.getLogger(FXMain.class.getName()).log(Level.WARNING,
-					// e.fillInStackTrace().toString());
+					Logger.getLogger(CZSMDPController.class.getName()).log(Level.WARNING, e1.fillInStackTrace().toString());
 				}
 				Scene scene = new Scene(root);
 				stage.setScene(scene);
 				stage.setTitle("Download report");
 				stage.show();
 			} catch (MalformedURLException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
+				Logger.getLogger(CZSMDPController.class.getName()).log(Level.WARNING, e2.fillInStackTrace().toString());
 			} catch (RemoteException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
+				Logger.getLogger(CZSMDPController.class.getName()).log(Level.WARNING, e2.fillInStackTrace().toString());
 			} catch (NotBoundException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
+				Logger.getLogger(CZSMDPController.class.getName()).log(Level.WARNING, e2.fillInStackTrace().toString());
 			}
-		
-		/*String PATH = "resources";
-		String DOWNLOAD_PATH="downlaoding";
-			System.setProperty("java.security.policy", PATH + File.separator + "client_policyfile.txt");
-			if (System.getSecurityManager() == null) {
-				System.setSecurityManager(new SecurityManager());
-			}
-			AZSMDPInterface azsmdpServer;
-			try {
-				azsmdpServer = (AZSMDPInterface) Naming.lookup("rmi://127.0.0.1:1099/AZSMDPServer");
-				azsmdpServer.downloadReport(DOWNLOAD_PATH);	
-			} catch (MalformedURLException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			} catch (RemoteException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			} catch (NotBoundException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}*/
-				
 	}
 }

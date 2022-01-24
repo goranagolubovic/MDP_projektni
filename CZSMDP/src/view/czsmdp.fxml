@@ -38,69 +38,69 @@
    <children>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: cdaf3f;" GridPane.columnSpan="11" GridPane.rowSpan="10">
          <children>
-            <ImageView fitHeight="75.0" fitWidth="201.0" layoutX="250.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="76.0" fitWidth="220.0" layoutX="250.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../ZSMDP/images/template6.png" />
                </image>
             </ImageView>
-            <Label alignment="CENTER" layoutX="263.0" layoutY="22.0" prefHeight="42.0" prefWidth="171.0" text="CZSMDP">
+            <Label alignment="CENTER" layoutX="263.0" layoutY="22.0" prefHeight="42.0" prefWidth="173.0" text="CZSMDP">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
             </Label>
-            <ImageView fitHeight="522.0" fitWidth="645.0" layoutX="75.0" layoutY="75.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="430.0" fitWidth="450.0" layoutX="130.0" layoutY="73.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../ZSMDP/images/template7.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="addUserImageView" fitHeight="57.0" fitWidth="59.0" layoutX="137.0" layoutY="128.0" onMouseClicked="#addUser" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="addUserImageView" fitHeight="57.0" fitWidth="59.0" layoutX="184.0" layoutY="137.0" onMouseClicked="#addUser" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../ZSMDP/images/add-user.png" />
+                  <Image url="@../../images/add-user.png" />
                </image>
             </ImageView>
-            <Label layoutX="201.0" layoutY="143.0" prefHeight="26.0" prefWidth="84.0" text="Dodaj korisnika" />
-            <ImageView fitHeight="57.0" fitWidth="65.0" layoutX="137.0" layoutY="202.0" onMouseClicked="#deleteUser" pickOnBounds="true" preserveRatio="true">
+            <Label layoutX="250.0" layoutY="152.0" prefHeight="26.0" prefWidth="84.0" text="Dodaj korisnika" />
+            <ImageView fitHeight="57.0" fitWidth="59.0" layoutX="184.0" layoutY="231.0" onMouseClicked="#deleteUser" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../ZSMDP/images/delete-user.png" />
+                  <Image url="@../../images/delete-user.png" />
                </image>
             </ImageView>
-            <Label layoutX="202.0" layoutY="222.0" text="Obriši korisnika" />
-            <ImageView fitHeight="57.0" fitWidth="57.0" layoutX="137.0" layoutY="268.0" onMouseClicked="#viewUsers" pickOnBounds="true" preserveRatio="true">
+            <Label layoutX="251.0" layoutY="251.0" text="Obriši korisnika" />
+            <ImageView fitHeight="57.0" fitWidth="59.0" layoutX="184.0" layoutY="326.0" onMouseClicked="#viewUsers" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../ZSMDP/images/users.png" />
+                  <Image url="@../../images/users.png" />
                </image>
             </ImageView>
-            <Label layoutX="200.0" layoutY="288.0" text="Pregledaj korisnike" />
-            <ImageView fitHeight="75.0" fitWidth="57.0" layoutX="137.0" layoutY="336.0" onMouseClicked="#viewTimeSchedule" pickOnBounds="true" preserveRatio="true">
+            <Label layoutX="251.0" layoutY="346.0" text="Pregledaj korisnike" />
+            <ImageView fitHeight="57.0" fitWidth="59.0" layoutX="184.0" layoutY="422.0" onMouseClicked="#viewTimeSchedule" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../ZSMDP/images/view-timetable.png" />
+                  <Image url="@../../images/view-timetable.png" />
                </image>
             </ImageView>
-            <Label layoutX="202.0" layoutY="356.0" text="Pregledaj red vožnje" />
-            <ImageView fitHeight="57.0" fitWidth="57.0" layoutX="137.0" layoutY="406.0" onMouseClicked="#deleteLine" pickOnBounds="true" preserveRatio="true">
+            <Label layoutX="251.0" layoutY="442.0" text="Pregledaj red vožnje" />
+            <ImageView fitHeight="57.0" fitWidth="59.0" layoutX="373.0" layoutY="137.0" onMouseClicked="#deleteLine" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../ZSMDP/images/delete-line.png" />
+                  <Image url="@../../images/delete-line.png" />
                </image>
             </ImageView>
-            <Label layoutX="201.0" layoutY="425.0" prefHeight="18.0" prefWidth="84.0" text="Obriši liniju" />
-            <ImageView fitHeight="68.0" fitWidth="57.0" layoutX="137.0" layoutY="478.0" onMouseClicked="#createSchedule" pickOnBounds="true" preserveRatio="true">
+            <Label layoutX="434.0" layoutY="156.0" prefHeight="18.0" prefWidth="84.0" text="Obriši liniju" />
+            <ImageView fitHeight="57.0" fitWidth="59.0" layoutX="373.0" layoutY="231.0" onMouseClicked="#createSchedule" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../ZSMDP/images/view-schedule.png" />
+                  <Image url="@../../images/view-schedule.png" />
                </image>
             </ImageView>
-            <Label layoutX="202.0" layoutY="498.0" text="Kreiraj red vožnje" />
-            <ImageView fx:id="viewNotificationsImageView" fitHeight="57.0" fitWidth="57.0" layoutX="320.0" layoutY="128.0" onMouseClicked="#viewNotifications" pickOnBounds="true" preserveRatio="true">
+            <Label layoutX="436.0" layoutY="251.0" text="Kreiraj red vožnje" />
+            <ImageView fx:id="viewNotificationsImageView" fitHeight="57.0" fitWidth="59.0" layoutX="373.0" layoutY="326.0" onMouseClicked="#viewNotifications" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../ZSMDP/images/bell.png" />
                </image>
             </ImageView>
-            <Label layoutX="387.0" layoutY="147.0" text="Pregledaj obavještenja" />
-            <ImageView fitHeight="57.0" fitWidth="66.0" layoutX="320.0" layoutY="202.0" onMouseClicked="#downloadReport" pickOnBounds="true" preserveRatio="true">
+            <Label layoutX="434.0" layoutY="346.0" text="Pregledaj obavještenja" />
+            <ImageView fitHeight="57.0" fitWidth="59.0" layoutX="373.0" layoutY="422.0" onMouseClicked="#downloadReport" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../ZSMDP/images/download-file.png" />
+                  <Image url="@../../images/download-file.png" />
                </image>
             </ImageView>
-            <Label layoutX="387.0" layoutY="214.0" text="Preuzmi izvješstaj" />
+            <Label layoutX="436.0" layoutY="442.0" text="Preuzmi izvješstaj" />
          </children>
       </AnchorPane>
    </children>

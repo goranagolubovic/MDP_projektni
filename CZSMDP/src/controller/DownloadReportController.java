@@ -11,6 +11,9 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -20,13 +23,15 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import main.FXMain;
+import properties.ConfigProperties;
 import server.AZSMDPInterface;
 import server.Report;
+import servers.ChatSocketServer;
 
 public class DownloadReportController implements Initializable{
 	@FXML
@@ -34,6 +39,7 @@ public class DownloadReportController implements Initializable{
 	private Scene previousScene;
 	private String previousTitle;
 	private List<String> fileNames;
+	private static ConfigProperties configProperties=new ConfigProperties();
 	public DownloadReportController(Scene scene, String title, List<String> fileNames) {
 		previousScene=scene;
 		previousTitle=title;
@@ -41,27 +47,6 @@ public class DownloadReportController implements Initializable{
 	}
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-	/*	String PATH = "resources";
-		String DOWNLOAD_PATH="downlaoding";
-			System.setProperty("java.security.policy", PATH + File.separator + "client_policyfile.txt");
-			if (System.getSecurityManager() == null) {
-				System.setSecurityManager(new SecurityManager());
-			}
-			AZSMDPInterface azsmdpServer;
-			try {
-				azsmdpServer = (AZSMDPInterface) Naming.lookup("rmi://127.0.0.1:1099/AZSMDPServer");
-				List<String> fileNames = azsmdpServer.getReportNames();	
-				initializeGridPaneReport(fileNames);
-			} catch (MalformedURLException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			} catch (RemoteException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			} catch (NotBoundException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}*/
 		initializeGridPaneReport(fileNames);
 	}
 	private void initializeGridPaneReport(List<String> fileNames) {
@@ -77,45 +62,38 @@ public class DownloadReportController implements Initializable{
 		  for(int i=0;i<fileNames.size();i++) {
 			  ImageView imageView;
 			try {
-				imageView = new ImageView(new Image(new FileInputStream("C:\\Users\\goran\\Desktop\\MDP-projektni\\ZSMDP\\images\\download.png")));
+				imageView = new ImageView(new Image(new FileInputStream(configProperties.getProperties().getProperty("DOWNLAD_REPORT_IMAGE"))));
 				  imageView.setOnMouseClicked(downloadFile(i));
 				  imageView.setFitHeight(30);
 				  imageView.setFitWidth(30);
 				  gridPaneReport.add(imageView, 1, i);
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.getLogger(DownloadReportController.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 			}
 		  }
 		  
 	}
 	@FXML
 	private EventHandler<? super MouseEvent> downloadFile(int i) {
-		String PATH = "resources";
-		String DOWNLOAD_PATH="downloading";
-			System.setProperty("java.security.policy", PATH + File.separator + "client_policyfile.txt");
+			System.setProperty("java.security.policy", configProperties.getProperties().getProperty("CLIENT_POLICYFILE"));
 			if (System.getSecurityManager() == null) {
 				System.setSecurityManager(new SecurityManager());
 			}
 			AZSMDPInterface azsmdpServer;
 			try {
-				azsmdpServer = (AZSMDPInterface) Naming.lookup("rmi://127.0.0.1:1099/AZSMDPServer");
+				azsmdpServer = (AZSMDPInterface) Naming.lookup(configProperties.getProperties().getProperty("NAMING_PATH"));
 				List<String> fileNames = azsmdpServer.getReportNames();
 				Report report=azsmdpServer.downloadReport(fileNames.get(i));
-				File downloadedFile=new File(DOWNLOAD_PATH+File.separator+report.getFileName());
+				File downloadedFile=new File(configProperties.getProperties().getProperty("DOWNLOAD_PATH")+File.separator+report.getFileName());
 				downloadedFile.createNewFile();
 			} catch (MalformedURLException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
+				Logger.getLogger(DownloadReportController.class.getName()).log(Level.WARNING, e2.fillInStackTrace().toString());
 			} catch (RemoteException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
+				Logger.getLogger(DownloadReportController.class.getName()).log(Level.WARNING, e2.fillInStackTrace().toString());
 			} catch (NotBoundException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
+				Logger.getLogger(DownloadReportController.class.getName()).log(Level.WARNING, e2.fillInStackTrace().toString());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.getLogger(DownloadReportController.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 			}
 		return null;
 	}

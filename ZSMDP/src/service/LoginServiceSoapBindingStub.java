@@ -24,10 +24,10 @@ public class LoginServiceSoapBindingStub extends org.apache.axis.client.Stub imp
         org.apache.axis.description.OperationDesc oper;
         org.apache.axis.description.ParameterDesc param;
         oper = new org.apache.axis.description.OperationDesc();
-        oper.setName("getStations");
+        oper.setName("users");
         oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         oper.setReturnClass(java.lang.String[].class);
-        oper.setReturnQName(new javax.xml.namespace.QName("http://service", "getStationsReturn"));
+        oper.setReturnQName(new javax.xml.namespace.QName("http://service", "usersReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         _operations[0] = oper;
@@ -46,10 +46,10 @@ public class LoginServiceSoapBindingStub extends org.apache.axis.client.Stub imp
         _operations[1] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
-        oper.setName("users");
+        oper.setName("getStations");
         oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         oper.setReturnClass(java.lang.String[].class);
-        oper.setReturnQName(new javax.xml.namespace.QName("http://service", "usersReturn"));
+        oper.setReturnQName(new javax.xml.namespace.QName("http://service", "getStationsReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         _operations[2] = oper;
@@ -169,7 +169,7 @@ public class LoginServiceSoapBindingStub extends org.apache.axis.client.Stub imp
         }
     }
 
-    public java.lang.String[] getStations() throws java.rmi.RemoteException {
+    public java.lang.String[] users() throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -181,7 +181,7 @@ public class LoginServiceSoapBindingStub extends org.apache.axis.client.Stub imp
         _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
         _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://service", "getStations"));
+        _call.setOperationName(new javax.xml.namespace.QName("http://service", "users"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -237,7 +237,7 @@ public class LoginServiceSoapBindingStub extends org.apache.axis.client.Stub imp
 }
     }
 
-    public java.lang.String[] users() throws java.rmi.RemoteException {
+    public java.lang.String[] getStations() throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -249,7 +249,7 @@ public class LoginServiceSoapBindingStub extends org.apache.axis.client.Stub imp
         _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
         _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://service", "users"));
+        _call.setOperationName(new javax.xml.namespace.QName("http://service", "getStations"));
 
         setRequestHeaders(_call);
         setAttachments(_call);

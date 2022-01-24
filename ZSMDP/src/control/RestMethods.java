@@ -7,21 +7,27 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
 
+import controllers.ZSMDPController;
+import main.FXMain;
 import model.Line;
+import properties.ConfigProperties;
 
 public class RestMethods {
+	private static ConfigProperties configProperties=new ConfigProperties();
+	private static Logger log = Logger.getLogger(RestMethods.class.getName());
 	public static Line[] method(String nameOfMethod,String id) {
 	URL url;
 	Line [] line=null;
 	try {
-		url = new URL("http://localhost:8080/CZSMDP/api/line/"+id);
+		url = new URL(configProperties.getProperties().getProperty("URL")+id);
 		HttpURLConnection conn;
 		try {
 			conn = (HttpURLConnection) url.openConnection();
@@ -43,13 +49,11 @@ public class RestMethods {
 			conn.disconnect();
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.getLogger(FXMain.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 		}
 		
 	} catch (MalformedURLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		Logger.getLogger(FXMain.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 	}
 	return line;
 	}
@@ -57,7 +61,7 @@ public class RestMethods {
 	public static void methodPut(String nameOfMethod,String id,Line line) {
 		URL url;
 		try {
-			url = new URL("http://localhost:8080/CZSMDP/api/line/");
+			url = new URL(configProperties.getProperties().getProperty("URL"));
 			HttpURLConnection conn;
 			try {
 				conn = (HttpURLConnection) url.openConnection();
@@ -76,13 +80,11 @@ public class RestMethods {
 				conn.disconnect();
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.getLogger(FXMain.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 			}
 			
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.getLogger(FXMain.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 		}
 		
 	

@@ -3,6 +3,7 @@
 	<name>CZSMDP</name>
 	<comment></comment>
 	<projects>
+		<project>ZSMDP</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

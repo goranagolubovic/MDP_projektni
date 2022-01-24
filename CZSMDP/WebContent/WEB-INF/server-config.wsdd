@@ -33,12 +33,12 @@
   <ns1:parameter name="className" value="org.apache.axis.Version"/>
  </ns1:service>
  <ns1:service name="LoginService" provider="java:RPC" style="wrapped" use="literal">
-  <ns2:operation name="getStations" qname="ns1:getStations" returnQName="ns1:getStationsReturn" returnType="xsd:string" soapAction="" xmlns:ns1="http://service" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://xml.apache.org/axis/wsdd/"/>
+  <ns2:operation name="users" qname="ns1:users" returnQName="ns1:usersReturn" returnType="xsd:string" soapAction="" xmlns:ns1="http://service" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://xml.apache.org/axis/wsdd/"/>
   <ns1:operation name="login" qname="ns2:login" returnQName="ns2:loginReturn" returnType="ns3:User" soapAction="" xmlns:ns2="http://service" xmlns:ns3="http://model">
    <ns1:parameter qname="ns2:user" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
    <ns1:parameter qname="ns2:password" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
   </ns1:operation>
-  <ns1:operation name="users" qname="ns4:users" returnQName="ns4:usersReturn" returnType="xsd:string" soapAction="" xmlns:ns4="http://service" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+  <ns1:operation name="getStations" qname="ns4:getStations" returnQName="ns4:getStationsReturn" returnType="xsd:string" soapAction="" xmlns:ns4="http://service" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
   <ns1:operation name="getUsersForSelectedStation" qname="ns5:getUsersForSelectedStation" returnQName="ns5:getUsersForSelectedStationReturn" returnType="xsd:string" soapAction="" xmlns:ns5="http://service" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
    <ns1:parameter qname="ns5:station" type="xsd:string"/>
   </ns1:operation>

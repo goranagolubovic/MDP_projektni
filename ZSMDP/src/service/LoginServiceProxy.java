@@ -44,10 +44,10 @@ public class LoginServiceProxy implements service.LoginService {
     return loginService;
   }
   
-  public java.lang.String[] getStations() throws java.rmi.RemoteException{
+  public java.lang.String[] users() throws java.rmi.RemoteException{
     if (loginService == null)
       _initLoginServiceProxy();
-    return loginService.getStations();
+    return loginService.users();
   }
   
   public model.User login(java.lang.String user, java.lang.String password) throws java.rmi.RemoteException{
@@ -56,10 +56,10 @@ public class LoginServiceProxy implements service.LoginService {
     return loginService.login(user, password);
   }
   
-  public java.lang.String[] users() throws java.rmi.RemoteException{
+  public java.lang.String[] getStations() throws java.rmi.RemoteException{
     if (loginService == null)
       _initLoginServiceProxy();
-    return loginService.users();
+    return loginService.getStations();
   }
   
   public java.lang.String[] getUsersForSelectedStation(java.lang.String station) throws java.rmi.RemoteException{

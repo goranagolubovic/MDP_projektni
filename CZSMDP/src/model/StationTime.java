@@ -17,13 +17,6 @@ public class StationTime {
 	public void setIsTrainArrived(int isTrainArrived) {
 		this.isTrainArrived = isTrainArrived;
 	}
-	/*public StationTime(String station, String time) {
-		super();
-		this.station = station;
-		this.time = time;
-		this.actualTimeOfPassing="";
-		this.isTrainArrived=0;
-	}*/
 	public StationTime(String station, String time,String actualTimeOfPassing,int isTrainArrived) {
 		super();
 		this.station = station;

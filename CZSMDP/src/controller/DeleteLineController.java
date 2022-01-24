@@ -3,7 +3,6 @@ package controller;
 import java.util.Optional;
 
 import control.RestMethods;
-import control.XMLSerializer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;

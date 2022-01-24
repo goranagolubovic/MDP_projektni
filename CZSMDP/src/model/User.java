@@ -10,18 +10,13 @@ public class User {
 	private String password;
 	private String id;
 	
-	public User() {
-		
-	}
-	
-	
+	public User() {}
 	 public User(String username, String password, String idZSMDP) {
 		super();
 		this.username = username;
 		try {
 			this.password = User.toHexString(User.getSHA(password));
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.id = idZSMDP;
@@ -60,22 +55,14 @@ public class User {
 
 	public static byte[] getSHA(String input) throws NoSuchAlgorithmException  
 	    {  
-	        /* MessageDigest instance for hashing using SHA256 */  
-	        MessageDigest md = MessageDigest.getInstance("SHA-256");  
-	  
-	        /* digest() method called to calculate message digest of an input and return array of byte */  
+	        MessageDigest md = MessageDigest.getInstance("SHA-256");   
 	        return md.digest(input.getBytes(StandardCharsets.UTF_8));  
 	    }  
 	      
 	    public static String toHexString(byte[] hash)  
-	    {  
-	        /* Convert byte array of hash into digest */  
+	    {   
 	        BigInteger number = new BigInteger(1, hash);  
-	  
-	        /* Convert the digest into hex value */  
-	        StringBuilder hexString = new StringBuilder(number.toString(16));  
-	  
-	        /* Pad with leading zeros */  
+	        StringBuilder hexString = new StringBuilder(number.toString(16));   
 	        while (hexString.length() < 32)  
 	        {  
 	            hexString.insert(0, '0');  

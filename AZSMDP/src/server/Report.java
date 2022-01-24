@@ -5,9 +5,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 public class Report implements Serializable{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private String fileName;
 	private byte[] fileContent;

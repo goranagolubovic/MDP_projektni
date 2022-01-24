@@ -54,13 +54,13 @@
                </font>
             </Label>
             <TextField fx:id="userNameTextField" layoutX="362.0" layoutY="343.0" prefHeight="26.0" prefWidth="168.0" promptText="Korisničko ime" style="-fx-background-color: ffffff;" />
-            <Text layoutX="386.0" layoutY="505.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Prijavi se" wrappingWidth="125.33673095703125">
+            <Text layoutX="357.0" layoutY="509.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Prijavi se" textAlignment="CENTER" wrappingWidth="182.4000366210937">
                <font>
                   <Font size="24.0" />
                </font>
             </Text>
             <PasswordField fx:id="passwordTextField" layoutX="362.0" layoutY="411.0" promptText="Lozinka" style="-fx-background-color: ffffff;" />
-            <ImageView fitHeight="42.0" fitWidth="197.0" layoutX="350.0" layoutY="479.0" onMouseClicked="#login" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="42.0" fitWidth="193.0" layoutX="352.0" layoutY="479.0" onMouseClicked="#login" pickOnBounds="true" preserveRatio="true" />
          </children>
       </AnchorPane>
    </children>

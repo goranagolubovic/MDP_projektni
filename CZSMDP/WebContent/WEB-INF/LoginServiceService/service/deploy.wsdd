@@ -10,13 +10,13 @@
       <parameter name="className" value="service.LoginService"/>
       <parameter name="wsdlPortType" value="LoginService"/>
       <parameter name="typeMappingVersion" value="1.2"/>
-      <operation xmlns:operNS="http://service" xmlns:retNS="http://service" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="getStations" qname="operNS:getStations" returnQName="retNS:getStationsReturn" returnType="rtns:string" soapAction="">
+      <operation xmlns:operNS="http://service" xmlns:retNS="http://service" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="users" qname="operNS:users" returnQName="retNS:usersReturn" returnType="rtns:string" soapAction="">
       </operation>
       <operation xmlns:operNS="http://service" xmlns:retNS="http://service" xmlns:rtns="http://model" name="login" qname="operNS:login" returnQName="retNS:loginReturn" returnType="rtns:User" soapAction="">
         <parameter xmlns:pns="http://service" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:user" type="tns:string"/>
         <parameter xmlns:pns="http://service" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:password" type="tns:string"/>
       </operation>
-      <operation xmlns:operNS="http://service" xmlns:retNS="http://service" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="users" qname="operNS:users" returnQName="retNS:usersReturn" returnType="rtns:string" soapAction="">
+      <operation xmlns:operNS="http://service" xmlns:retNS="http://service" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="getStations" qname="operNS:getStations" returnQName="retNS:getStationsReturn" returnType="rtns:string" soapAction="">
       </operation>
       <operation xmlns:operNS="http://service" xmlns:retNS="http://service" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="getUsersForSelectedStation" qname="operNS:getUsersForSelectedStation" returnQName="retNS:getUsersForSelectedStationReturn" returnType="rtns:string" soapAction="">
         <parameter xmlns:pns="http://service" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:station" type="tns:string"/>

@@ -10,8 +10,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -38,6 +36,7 @@ public class ViewTimeController implements Initializable{
 		public void goBack(ActionEvent e) {
 		Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         stage.setScene(previousScene);
+        stage.setTitle(previousTitle);
         stage.show();
 	}
 

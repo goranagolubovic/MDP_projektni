@@ -1,19 +1,15 @@
 package database;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.google.gson.Gson;
 
 import model.Line;
 import model.StationTime;
-import model.User;
 import redis.clients.jedis.Jedis;
 
 public class RedisDatabase {
@@ -73,13 +69,6 @@ public class RedisDatabase {
 	}
 
 	public boolean update(String id,Line line) {
-		/*StationTime stationtime=null;
-		for(StationTime st:line.getStations()) {
-			if(id.equals(st.getStation())) {
-				stationtime=st;
-				break;
-			}
-		}*/
 		String res = jedis.set(id, gson.toJson(line));
 		System.out.println(res);
 		if ("OK".equals(res)) {

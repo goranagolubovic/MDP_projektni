@@ -32,5 +32,6 @@
 	<classpathentry kind="lib" path="C:/Users/goran/Desktop/jar_files/lib/slf4j-simple-1.7.22.jar"/>
 	<classpathentry kind="lib" path="lib/commons-net-3.3.jar"/>
 	<classpathentry kind="lib" path="C:/Users/goran/Desktop/jar_files/commons-net-3.3.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

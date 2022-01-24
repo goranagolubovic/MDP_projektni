@@ -34,6 +34,9 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.net.ssl.SSLSocket;
@@ -71,7 +74,9 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import main.FXMain;
 import model.User;
+import properties.ConfigProperties;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 import server.AZSMDPInterface;
 import server.Report;
@@ -102,29 +107,23 @@ public class ZSMDPController implements Initializable {
 	private String id;
 	private String username;
 	private ChatClientSocket chatClientSocket;
-	private String filePath;
-	private boolean isMessageFile = false;
-
-	private String downloadFolder = "files";
-
+	private ConfigProperties configProperties=new ConfigProperties();
 	ConcurrentHashMap<String,Boolean> readyMap = new ConcurrentHashMap<>();
 	ConcurrentHashMap<String, String> userMessagesMap = new ConcurrentHashMap<>();
 	List<String> onlineUsers = new ArrayList<>();
-
 	private String notificationContent = "";
 	private Object userComboBoxLocker = new Object();
-	private String previousUserComboBoxValue="";
-	private boolean isNewConnectionInitiated=true;
-	private volatile boolean isChatRequestProcedeed;
-
-	private static final int NOTIFICATION_PORT = 20000;
-	private static final String NOTIFICATION_HOST = "224.0.0.11";
-
+	private static int NOTIFICATION_PORT;
+	private static String NOTIFICATION_HOST;
+	private static Logger log = Logger.getLogger(ZSMDPController.class.getName());
 	public ZSMDPController(String id, String username) {
 		this.id = id;
 		this.username = username;
 		this.chatClientSocket = new ChatClientSocket(username);
 		onlineUsers.add(username);
+		NOTIFICATION_PORT=Integer.valueOf(configProperties.getProperties().getProperty("NOTIFICATION_PORT"));
+		NOTIFICATION_HOST=configProperties.getProperties().getProperty("NOTIFICATION_HOST");
+		
 	}
 
 	public ZSMDPController() {
@@ -133,7 +132,7 @@ public class ZSMDPController implements Initializable {
 
 	@FXML
 	private void viewTime(MouseEvent e) {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/viewTime.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(configProperties.getProperties().getProperty("VIEW_TIME")));
 		Parent root = null;
 		ViewTimeController viewTimeController = new ViewTimeController(viewTimeImage.getScene(), id);
 		loader.setController(viewTimeController);
@@ -141,12 +140,8 @@ public class ZSMDPController implements Initializable {
 			root = loader.load();
 
 		} catch (IOException e1) {
-			e1.printStackTrace();
-			// Logger.getLogger(FXMain.class.getName()).addHandler(MainPageController.handler);
-			// Logger.getLogger(FXMain.class.getName()).log(Level.WARNING,
-			// e.fillInStackTrace().toString());
+			Logger.getLogger(ZSMDPController.class.getName()).log(Level.WARNING, e1.fillInStackTrace().toString());
 		}
-		System.out.println(loader.getLocation());
 		Scene scene = new Scene(root);
 		Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
 		stage.setScene(scene);
@@ -156,7 +151,7 @@ public class ZSMDPController implements Initializable {
 
 	@FXML
 	private void addTime(MouseEvent e) {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/addTime.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(configProperties.getProperties().getProperty("ADD_TIME")));
 		Parent root = null;
 		AddTimeController addTimeController = new AddTimeController(addTimeImage.getScene(), id);
 		loader.setController(addTimeController);
@@ -164,10 +159,7 @@ public class ZSMDPController implements Initializable {
 			root = loader.load();
 
 		} catch (IOException e1) {
-			e1.printStackTrace();
-			// Logger.getLogger(FXMain.class.getName()).addHandler(MainPageController.handler);
-			// Logger.getLogger(FXMain.class.getName()).log(Level.WARNING,
-			// e.fillInStackTrace().toString());
+			Logger.getLogger(ZSMDPController.class.getName()).log(Level.WARNING, e1.fillInStackTrace().toString());
 		}
 		Scene scene = new Scene(root);
 		Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
@@ -203,19 +195,16 @@ public class ZSMDPController implements Initializable {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.getLogger(ZSMDPController.class.getName()).log(Level.WARNING, e,()->e.getMessage());
 			}
-			// userComboBox.getItems().addListener(log.getUsersForSelectedStation(locationComboBox.getValue()),userComboBox.getItems(),log.getUsersForSelectedStation(locationComboBox.getValue()));
 		} catch (ServiceException e1) {
-			e1.printStackTrace();
+			Logger.getLogger(ZSMDPController.class.getName()).log(Level.WARNING,e1,()->e1.getMessage());
 		} catch (RemoteException e2) {
-			e2.printStackTrace();
+			Logger.getLogger(ZSMDPController.class.getName()).log(Level.WARNING, e2,()->e2.getMessage());
 		}
 		listenForMessages();
 		listenForNotifications();
 		userComboBox.valueProperty().addListener((ov,previous,current)->{
-				//Platform.runLater(()->{
 					if(!"".equals(current) && current!=null) {
 						System.out.println(current);
 							boolean ready=readyMap.get(userComboBox.getValue());
@@ -233,8 +222,6 @@ public class ZSMDPController implements Initializable {
 							}
 						}
 		});
-		//checkIfUserComboBoxIsNotEmpty();
-		//actionUserComboBoxListener();
 	}
 
 	private void listenForNotifications() {
@@ -260,7 +247,7 @@ public class ZSMDPController implements Initializable {
 					}
 				}
 			} catch (IOException ioe) {
-				System.out.println(ioe);
+				Logger.getLogger(ZSMDPController.class.getName()).log(Level.WARNING, ioe.fillInStackTrace().toString());
 			}
 		}).start();
 	}
@@ -271,7 +258,6 @@ public class ZSMDPController implements Initializable {
 
 	@FXML
 	public void initializeUserComboBox(ActionEvent e) {
-			isChatRequestProcedeed=false;
 			LoginServiceServiceLocator locator = new LoginServiceServiceLocator();
 			LoginService log;
 			PrintWriter out = chatClientSocket.out;
@@ -284,8 +270,7 @@ public class ZSMDPController implements Initializable {
 				}
 				out.println("SEND ONLINE USERS:" + id + "#" + username + ":" + locationComboBox.getValue());
 			} catch (ServiceException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				Logger.getLogger(ZSMDPController.class.getName()).log(Level.WARNING, e1.fillInStackTrace().toString());
 			}
 	}
 
@@ -300,16 +285,9 @@ public class ZSMDPController implements Initializable {
 							if (msg.startsWith("ONLINE USERS")) {
 								String users = msg.split(":")[1];
 								String usersGroup[]=users.split(";");
-								// List<String> onlineUsers=Arrays.asList(users.split("*"));
-								// List<String> olineUsersForSelectedStation=onlineUsers.stream()
-								// .filter(u->u.startsWith(locationComboBox.getValue()))
-								// .collect(Collectors.toList());
-								// Platform.runLater(()->{
 								if(!"empty".equals(users)) {
-								//userComboBox.setItems(users);
 								userComboBox.getItems().addAll(usersGroup);
 								}
-								// });
 							}
 							else if (msg.startsWith("NOT CONNECTED")) {
 								Platform.runLater(() -> {
@@ -330,7 +308,6 @@ public class ZSMDPController implements Initializable {
 								String receiverId = receiverInfo.split("#")[0];
 								String receiverUsername = receiverInfo.split("#")[1];
 
-								isChatRequestProcedeed=true;
 								Platform.runLater(() -> {
 									Alert alert = new Alert(AlertType.CONFIRMATION);
 									alert.setContentText("Da li želite da uspostavite komunikaciju sa korisnikom "
@@ -338,20 +315,21 @@ public class ZSMDPController implements Initializable {
 									final Optional<ButtonType> result = alert.showAndWait();
 									if (result.get() == ButtonType.OK) {
 										userComboBox.setValue("");
+										CountDownLatch signal = new CountDownLatch(1);
 										new Thread(() -> {
 											System.out.println("Non-UI thread");
 											out.println("VALID CONNECTION:" + receiverInfo + ":" + senderInfo);
 											userMessagesMap.put(senderInfo, "");
 											readyMap.put(senderUsername, true);
+											signal.countDown();
 										}).start();
+										try {
+											signal.await();
+										} catch (InterruptedException e) {
+											Logger.getLogger(ZSMDPController.class.getName()).log(Level.WARNING,e.fillInStackTrace().toString());
+										}
 										locationComboBox.setValue(senderId);
 										userComboBox.setValue(senderUsername);
-										/*userComboBox.setOnInputMethodTextChanged(e->{
-											messageTextArea.setText("");
-											return;
-										}
-										);*/
-										
 									}
 								});
 
@@ -365,10 +343,6 @@ public class ZSMDPController implements Initializable {
 								String receiverUsername = receiverInfo.split("#")[1];
 								if (!userMessagesMap.containsKey(senderInfo)) {
 									userMessagesMap.put(senderInfo, "");
-									/*Platform.runLater(() -> {
-										locationComboBox.setValue(senderId);
-										userComboBox.setValue(senderUsername);
-									});*/
 								}
 								readyMap.put(senderUsername, true);
 							}
@@ -418,7 +392,7 @@ public class ZSMDPController implements Initializable {
 									e1.printStackTrace();
 								}
 								if (wrapper.value) {
-									String filePath = downloadFolder + File.separator + receiverUsername;
+									String filePath = configProperties.getProperties().getProperty("DOWNLOAD_FOLDER") + File.separator + receiverUsername;
 									File file = new File(filePath);
 									if (!file.exists()) {
 										file.mkdir();
@@ -431,7 +405,7 @@ public class ZSMDPController implements Initializable {
 											a.show();
 										});
 									} catch (IOException e) {
-										e.printStackTrace();
+										Logger.getLogger(ZSMDPController.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 									}
 								}
 							}
@@ -439,128 +413,11 @@ public class ZSMDPController implements Initializable {
 						}
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					Logger.getLogger(ZSMDPController.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 				}
 			}
 		}).start();
 	}
-	/*@FXML
-	private void checkIfUserComboBoxIsNotEmpty() {
-		new Thread(()->{
-			while(true) {
-			if(userComboBox.getValue()!="") {
-				synchronized (userComboBoxLocker) {
-					userComboBoxLocker.notifyAll();
-				}
-			}
-			}
-		}).start();
-	}
-
-	@FXML
-	public void selectUser(ActionEvent e) {
-		if(e==null) {
-			messageTextArea.setText("");
-			//});
-			return;
-		}
-	new Thread(()->{
-		//Platform.runLater(()->{
-			if("".equals(userComboBox.getValue())) {
-				synchronized(userComboBoxLocker) {
-					try {
-						userComboBoxLocker.wait();
-					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					boolean ready=readyMap.get(userComboBox.getValue());
-					if (ready) {
-						//Platform.runLater(() -> {
-							messageTextArea.setText(userMessagesMap.get(userComboBox.getValue()));
-						//});
-						return;
-					}
-					else {
-						//Platform.runLater(() -> {
-							messageTextArea.setText("");
-						//});
-						new Thread(() -> ChatClientSocket.connect(id, username, locationComboBox.getValue(), userComboBox.getValue()))
-							.start();
-						return;
-					}
-				}
-			}
-			/*if("".equals(userComboBox.getValue())) {
-				return;
-			}
-			
-			else {
-				System.out.println(userComboBox.getValue());
-			boolean ready=readyMap.get(userComboBox.getValue());
-			if (ready) {
-				//Platform.runLater(() -> {
-				messageTextArea.setText(userMessagesMap.get(userComboBox.getValue()));
-			//});
-				return;
-			}
-			else {
-				//Platform.runLater(() -> {
-					messageTextArea.setText("");
-				//});
-				//new Thread(() ->
-				ChatClientSocket.connect(id, username, locationComboBox.getValue(), userComboBox.getValue());
-					//.start();
-				return;
-			}
-			}*/
-		//});
-		//}).start();
-//}
-	/*private void actionUserComboBoxListener() {
-		new Thread(()->{
-			while(true) {
-				if(isChatRequestProcedeed) {
-					synchronized(userComboBoxLocker) {
-						try {
-							userComboBoxLocker.wait();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						}
-				}
-			if(!previousUserComboBoxValue.equals(userComboBox.getValue()))
-				isNewConnectionInitiated=true;
-			while(isNewConnectionInitiated) {
-			if(!"".equals(userComboBox.getValue())) {
-				previousUserComboBoxValue=userComboBox.getValue();
-					boolean ready=readyMap.get(userComboBox.getValue());
-					if (ready) {
-						//Platform.runLater(() -> {
-						messageTextArea.setText(userMessagesMap.get(userComboBox.getValue()));
-					//});
-					}
-					else {
-						//Platform.runLater(() -> {
-							messageTextArea.setText("");
-						//});
-						//new Thread(() ->
-						ChatClientSocket.connect(id, username, locationComboBox.getValue(), userComboBox.getValue());
-							isNewConnectionInitiated=false;
-				}
-				
-			}
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			}
-			}
-		}).start();
-	}*/
 	@FXML
 	private void sendMessage(MouseEvent e) {
 		boolean ready=readyMap.get(userComboBox.getValue());
@@ -598,7 +455,7 @@ public class ZSMDPController implements Initializable {
 						out.println(String.join(":", "FILE", id + "#" + username, receiverId + "#" + receiver,
 								f.getName(), fileContent));
 					} catch (IOException e1) {
-						e1.printStackTrace();
+						Logger.getLogger(ZSMDPController.class.getName()).log(Level.WARNING, e1.fillInStackTrace().toString());
 					}
 				}
 			}
@@ -624,7 +481,7 @@ public class ZSMDPController implements Initializable {
 
 	@FXML
 	private void sendNotification(MouseEvent e) {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/notification.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(configProperties.getProperties().getProperty("VIEW_NOTIFICATION")));
 		Parent root = null;
 		NotificationController notificationController = new NotificationController(viewTimeImage.getScene(), id,username);
 		loader.setController(notificationController);
@@ -632,13 +489,10 @@ public class ZSMDPController implements Initializable {
 			root = loader.load();
 
 		} catch (IOException e1) {
-			e1.printStackTrace();
-			// Logger.getLogger(FXMain.class.getName()).addHandler(MainPageController.handler);
-			// Logger.getLogger(FXMain.class.getName()).log(Level.WARNING,
-			// e.fillInStackTrace().toString());
+			Logger.getLogger(ZSMDPController.class.getName()).log(Level.WARNING, e1.fillInStackTrace().toString());
 		}
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add("/view/style.css");
+		scene.getStylesheets().add(configProperties.getProperties().getProperty("CSS"));
 		Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
 		stage.setScene(scene);
 		stage.setTitle(id);
@@ -646,17 +500,16 @@ public class ZSMDPController implements Initializable {
 	}
 	@FXML
 	private void sendReport(MouseEvent e) {
-		String PATH = "resources";
 		FileChooser fc = new FileChooser();
 		File file = fc.showOpenDialog(addFileImageView.getScene().getWindow());
 		if (file != null && file.getName().endsWith(".pdf")) {
-			System.setProperty("java.security.policy", PATH + File.separator + "client_policyfile.txt");
+			System.setProperty("java.security.policy", configProperties.getProperties().getProperty("CLIENT_POLICYFILE"));
 			if (System.getSecurityManager() == null) {
 				System.setSecurityManager(new SecurityManager());
 			}
 
 				try {
-					AZSMDPInterface azsmdpServer=(AZSMDPInterface) Naming.lookup("rmi://127.0.0.1:1099/AZSMDPServer");
+					AZSMDPInterface azsmdpServer=(AZSMDPInterface) Naming.lookup( configProperties.getProperties().getProperty("NAMING_PATH"));
 					try {
 						azsmdpServer.uploadReport(new Report(
 								file.getName(),
@@ -666,14 +519,11 @@ public class ZSMDPController implements Initializable {
 								file.length()
 						));
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						Logger.getLogger(ZSMDPController.class.getName()).log(Level.WARNING, e1.fillInStackTrace().toString());
 					}
 				} catch (RemoteException | NotBoundException | MalformedURLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					Logger.getLogger(ZSMDPController.class.getName()).log(Level.WARNING, e1.fillInStackTrace().toString());
 				}
-				//AZSMDPInterface onlineShop = (AZSMDPInterface)
 				
 	}
 	}

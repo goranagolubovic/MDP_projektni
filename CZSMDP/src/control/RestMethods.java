@@ -4,33 +4,36 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status.Family;
 
-import org.glassfish.jersey.client.ClientConfig;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
 
+import main.FXMain;
 import model.Line;
+import properties.ConfigProperties;
 
 public class RestMethods {
+	private static ConfigProperties configProperties=new ConfigProperties();
 	public static Line[] method(String nameOfMethod,String id) {
 	URL url;
 	Line [] line=null;
 	try {
-		url = new URL("http://localhost:8080/CZSMDP/api/line/"+id);
+		url = new URL(configProperties.getProperties().getProperty("URL")+id);
 		HttpURLConnection conn;
 		try {
 			conn = (HttpURLConnection) url.openConnection();
@@ -52,13 +55,11 @@ public class RestMethods {
 			conn.disconnect();
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.getLogger(RestMethods.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 		}
 		
 	} catch (MalformedURLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		Logger.getLogger(RestMethods.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 	}
 	return line;
 	}
@@ -66,7 +67,7 @@ public class RestMethods {
 	public static void methodPut(String nameOfMethod,String id,Line line) {
 		URL url;
 		try {
-			url = new URL("http://localhost:8080/CZSMDP/api/line/"+id);
+			url = new URL(configProperties.getProperties().getProperty("URL")+id);
 			HttpURLConnection conn;
 			try {
 				conn = (HttpURLConnection) url.openConnection();
@@ -85,13 +86,11 @@ public class RestMethods {
 				conn.disconnect();
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.getLogger(RestMethods.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 			}
 			
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.getLogger(RestMethods.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 		}
 		
 		
@@ -101,7 +100,7 @@ public class RestMethods {
 		URL url;
 		Line [] line=null;
 		try {
-			url = new URL("http://localhost:8080/CZSMDP/api/line/");
+			url = new URL(configProperties.getProperties().getProperty("URL"));
 			HttpURLConnection conn;
 			try {
 				conn = (HttpURLConnection) url.openConnection();
@@ -123,13 +122,11 @@ public class RestMethods {
 				conn.disconnect();
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.getLogger(RestMethods.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 			}
 			
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.getLogger(RestMethods.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 		}
 		return line;
 		}
@@ -137,7 +134,7 @@ public class RestMethods {
 	public static boolean methodDelete(String nameOfMethod,String signOfLine) {
 		URL url;
 		try { 
-			url = new URL("http://localhost:8080/CZSMDP/api/line/"+signOfLine);
+			url = new URL(configProperties.getProperties().getProperty("URL")+signOfLine);
 			HttpURLConnection conn;
 			try {
 				conn = (HttpURLConnection) url.openConnection();
@@ -146,26 +143,23 @@ public class RestMethods {
 				conn.setRequestMethod(nameOfMethod);
 				if (conn.getResponseCode() != HttpURLConnection.HTTP_NO_CONTENT) {
 					return false;
-					//throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
 				}
 				else {
 					return true;
 				}
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.getLogger(RestMethods.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 			}
 			
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.getLogger(RestMethods.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 		}	
 		return false;
 	}
 
 	public static boolean createSchedule(String nameOfMethod, Line line) {
-		WebTarget webTarget = ClientBuilder.newClient().target("http://localhost:8080/CZSMDP/api/line");
+		WebTarget webTarget = ClientBuilder.newClient().target(configProperties.getProperties().getProperty("URL"));
 		Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.post(Entity.json(line));
 		return response.getStatus()==200;

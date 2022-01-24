@@ -91,10 +91,6 @@ public class AddTimeController implements Initializable {
         		bp.setCenter(ta);
         	}
         	else if(i==3) {
-        		/*TextField tf=new TextField();
-        		tf.setPrefHeight(cellHeight);
-        		tf.setPrefWidth(cellWidth);
-        		tf.setStyle("-fx-background-color: #906b2c; -fx-border-width: 2; -fx-border-color: #f4f4f4");*/
         		List<StationTime> listOfStationTime=lines[j].getStations().stream().filter(elem->elem.getStation().equals(id)).collect(Collectors.toList());
         		listOfStationTime.stream().map(elem->elem.getActualTimeOfPassing()).forEach(elem->ta.setText(elem));
         		textFields.put(lines[j],ta);

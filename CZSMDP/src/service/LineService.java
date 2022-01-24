@@ -47,24 +47,6 @@ public class LineService {
 			return Response.status(404).build();
 		}
 	}
-	/*
-	 * @Path("/{sign}")
-	 * 
-	 * @POST
-	 * 
-	 * @Consumes(MediaType.APPLICATION_JSON)
-	 * 
-	 * @Produces(MediaType.APPLICATION_JSON) public Response add(Line
-	 * line,@PathParam("sign") String sign) { if(redis.addLineInDatabase(line)) {
-	 * System.out.println("added"); return
-	 * Response.status(200).entity(line).build(); } else {
-	 * System.out.println("not added"); return
-	 * Response.status(500).entity("Greska pri dodavanju linije.").build(); } Line
-	 * l=gson.fromJson(line.toString(),Line.class);
-	 * System.out.println(l.toString()); return
-	 * Response.status(200).entity(l).build(); }
-	 */
-
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

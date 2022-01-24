@@ -54,10 +54,7 @@ public class RedisDatabaseSingleton {
 	public static void setGson(Gson gson) {
 		RedisDatabaseSingleton.gson = gson;
 	}
-
-
 	public static RedisDatabaseSingleton getInstance() {
-		// To ensure only one instance is created
 		if (instance == null) {
 			instance = new RedisDatabaseSingleton();
 		}
