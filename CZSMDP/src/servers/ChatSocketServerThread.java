@@ -48,7 +48,13 @@ public class ChatSocketServerThread extends Thread {
 	public void run() {
 		try {
 			while (true) {
-				String request = in.readLine();
+				String request="";
+				try {
+				request = in.readLine();
+				}
+				catch(Exception e) {
+					return;
+				}
 				String senderInfo = request.split(":")[1];
 				String senderUsername = senderInfo.split("#")[1];
 				System.out.println(request);
@@ -103,7 +109,7 @@ public class ChatSocketServerThread extends Thread {
 				else {
 					SSLSocket senderSocket = clients.get(senderInfo);
 					PrintWriter pw = new PrintWriter(senderSocket.getOutputStream(), true);
-					pw.println("NOT CONNECTED:"+senderInfo.split("#")[1]);
+					pw.println("NOT CONNECTED:"+receiverInfo.split("#")[1]);
 				}
 			}
 

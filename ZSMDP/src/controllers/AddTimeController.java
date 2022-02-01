@@ -123,16 +123,8 @@ public class AddTimeController implements Initializable {
 		 Platform.runLater(new Runnable() {
 		      public void run() {
 		          Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		          alert.setTitle("");
-		          VBox a = new VBox();
-		          	a.setStyle("-fx-background-color:  #906b2c");
-		            a.setPrefHeight(100);
-		            a.setPrefWidth(100);
-		             Label label = new Label("Sačuvano!");
-		             label.setStyle("-fx-text-fill:  #ffffff");
-		             a.getChildren().add(label);
-		             alert.getDialogPane().setContent(a);
-			         alert.showAndWait();
+		          alert.setContentText("Sačuvano!");
+			      alert.showAndWait();
 		      }
 		    });
 	}

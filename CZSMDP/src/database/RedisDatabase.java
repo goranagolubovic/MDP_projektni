@@ -70,7 +70,6 @@ public class RedisDatabase {
 
 	public boolean update(String id,Line line) {
 		String res = jedis.set(id, gson.toJson(line));
-		System.out.println(res);
 		if ("OK".equals(res)) {
 			return true;
 		} else

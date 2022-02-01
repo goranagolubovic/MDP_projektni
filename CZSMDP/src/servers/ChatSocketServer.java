@@ -37,8 +37,7 @@ public class ChatSocketServer {
 				new ChatSocketServerThread(s).start();
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			//Logger.getLogger(ChatSocketServer.class.getName()).log(Level.WARNING, ex.fillInStackTrace().toString());
+			 Logger.getLogger(ChatSocketServer.class.getName()).log(Level.WARNING, ex.fillInStackTrace().toString());
 		}
 	}
 

@@ -206,7 +206,6 @@ public class ZSMDPController implements Initializable {
 		listenForNotifications();
 		userComboBox.valueProperty().addListener((ov,previous,current)->{
 					if(!"".equals(current) && current!=null) {
-						System.out.println(current);
 							boolean ready=readyMap.get(userComboBox.getValue());
 							if (ready) {
 								Platform.runLater(() -> {
@@ -223,7 +222,6 @@ public class ZSMDPController implements Initializable {
 						}
 		});
 	}
-
 	private void listenForNotifications() {
 		new Thread(() -> {
 			MulticastSocket socket = null;
@@ -317,7 +315,6 @@ public class ZSMDPController implements Initializable {
 										userComboBox.setValue("");
 										CountDownLatch signal = new CountDownLatch(1);
 										new Thread(() -> {
-											System.out.println("Non-UI thread");
 											out.println("VALID CONNECTION:" + receiverInfo + ":" + senderInfo);
 											userMessagesMap.put(senderInfo, "");
 											readyMap.put(senderUsername, true);

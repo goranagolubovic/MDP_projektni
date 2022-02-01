@@ -48,7 +48,7 @@
                   <Font name="System Bold" size="24.0" />
                </font>
             </Label>
-            <ImageView fitHeight="430.0" fitWidth="450.0" layoutX="130.0" layoutY="73.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="440.0" fitWidth="452.0" layoutX="129.0" layoutY="72.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../ZSMDP/images/template7.png" />
                </image>
